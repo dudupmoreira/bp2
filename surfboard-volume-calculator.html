@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Calculadora de Volume de Prancha - Board's Point</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 40px; background: #f7f7f7; }
+    .container { background: #fff; padding: 24px; border-radius: 8px; max-width: 500px; margin: auto; box-shadow: 0 2px 8px #0001; }
+    h1 { text-align: center; }
+    label { display: block; margin-top: 16px; }
+    select, input { width: 100%; padding: 8px; margin-top: 4px; border-radius: 4px; border: 1px solid #ccc; }
+    button { margin-top: 24px; width: 100%; padding: 12px; background: #0077cc; color: #fff; border: none; border-radius: 4px; font-size: 1.1em; cursor: pointer; }
+    .result, .recommendations { margin-top: 32px; }
+    .board { background: #f0f0f0; padding: 12px; border-radius: 6px; margin-bottom: 12px; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Calculadora de Volume de Prancha</h1>
+    <form id="volumeForm">
+      <label>Peso (kg): <input type="number" id="peso" min="30" max="150" required></label>
+      <label>Altura (cm): <input type="number" id="altura" min="120" max="220" required></label>
+      <label>Idade: <input type="number" id="idade" min="10" max="80" required></label>
+      <label>Condicionamento físico:
+        <select id="condicao">
+          <option value="baixo">Poderia ser melhor</option>
+          <option value="medio">Razoável</option>
+          <option value="alto">Muito bom</option>
+        </select>
+      </label>
+      <label>Frequência de surf:
+        <select id="frequencia">
+          <option value="nunca">Nunca</option>
+          <option value="mensal">Mensal</option>
+          <option value="semanal">Semanal</option>
+          <option value="diario">Diário</option>
+        </select>
+      </label>
+      <label>Nível de habilidade:
+        <select id="habilidade">
+          <option value="iniciante">Iniciante</option>
+          <option value="intermediario">Intermediário</option>
+          <option value="avancado">Avançado</option>
+        </select>
+      </label>
+      <label>Tipo de prancha:
+        <select id="tipo">
+          <option value="shortboard">Shortboard</option>
+          <option value="funboard">Funboard</option>
+          <option value="longboard">Longboard</option>
+        </select>
+      </label>
+      <button type="button" id="showAdvancedBtn" style="margin-top:16px; background:#eee; color:#333; border:1px solid #bbb;">Mostrar opções avançadas</button>
+      <div id="advancedOptions" style="display:none; margin-top:16px;">
+        <label>Altura da onda:
+          <select id="onda">
+            <option value="0">0-2ft (0-0,6m)</option>
+            <option value="2">2-4ft (0,6-1,2m)</option>
+            <option value="4">4-6ft (1,2-1,8m)</option>
+            <option value="6">6-8ft (1,8-2,4m)</option>
+            <option value="8">8ft+ (2,4m+)</option>
+          </select>
+        </label>
+        <label>Paddle power:
+          <select id="paddle">
+            <option value="1">1 (baixo)</option>
+            <option value="2">2</option>
+            <option value="3">3 (médio)</option>
+            <option value="4">4</option>
+            <option value="5">5 (alto)</option>
+          </select>
+        </label>
+        <label>Velocidade:
+          <select id="velocidade">
+            <option value="1">1 (baixa)</option>
+            <option value="2">2</option>
+            <option value="3">3 (média)</option>
+            <option value="4">4</option>
+            <option value="5">5 (alta)</option>
+          </select>
+        </label>
+        <label>Categoria da prancha:
+          <select id="categoria">
+            <option value="shortboard">Shortboard</option>
+            <option value="funboard">Funboard</option>
+            <option value="longboard">Longboard</option>
+            <option value="fish">Fish</option>
+            <option value="retro">Retro</option>
+            <option value="stepup">Step Up</option>
+            <option value="bigwave">Big Wave</option>
+            <option value="grom">Grom</option>
+          </select>
+        </label>
+      </div>
+      <button type="submit">Calcular volume e recomendar pranchas</button>
+    </form>
+    <div class="result" id="resultado"></div>
+    <div class="recommendations" id="recomendacoes"></div>
+  </div>
+  <script>
+    document.getElementById('showAdvancedBtn').onclick = function(e) {
+      e.preventDefault();
+      var adv = document.getElementById('advancedOptions');
+      adv.style.display = adv.style.display === 'none' ? 'block' : 'none';
+      this.innerText = adv.style.display === 'block' ? 'Ocultar opções avançadas' : 'Mostrar opções avançadas';
+    };
+
+    function calcularVolume(peso, habilidade, tipo, condicao, frequencia, onda, paddle, velocidade) {
+      let fator = 0.4;
+      if (tipo === 'longboard') {
+        fator += 0.15;
+      } else if (tipo === 'funboard') {
+        fator += 0.07;
+      }
+      if (habilidade === 'iniciante') {
+        fator += 0.08;
+      } else if (habilidade === 'intermediario') {
+        fator += 0.03;
+      } else if (habilidade === 'avancado') {
+        fator -= 0.03;
+      }
+      if (condicao === 'baixo') {
+        fator += 0.04;
+      } else if (condicao === 'alto') {
+        fator -= 0.02;
+      }
+      if (frequencia === 'nunca' || frequencia === 'mensal') {
+        fator += 0.03;
+      } else if (frequencia === 'diario') {
+        fator -= 0.02;
+      }
+      // Opções avançadas
+      if (onda) {
+        if (parseInt(onda) <= 2) fator += 0.03;
+        else if (parseInt(onda) >= 6) fator -= 0.02;
+      }
+      if (paddle) {
+        if (parseInt(paddle) <= 2) fator += 0.02;
+        else if (parseInt(paddle) >= 4) fator -= 0.01;
+      }
+      if (velocidade) {
+        if (parseInt(velocidade) <= 2) fator += 0.01;
+        else if (parseInt(velocidade) >= 4) fator -= 0.01;
+      }
+      return Math.round(peso * fator * 10) / 10;
+    }
+
+    document.getElementById('volumeForm').onsubmit = async function(e) {
+      e.preventDefault();
+      const peso = parseFloat(document.getElementById('peso').value);
+      const altura = parseInt(document.getElementById('altura').value);
+      const idade = parseInt(document.getElementById('idade').value);
+      const condicao = document.getElementById('condicao').value;
+      const frequencia = document.getElementById('frequencia').value;
+      const habilidade = document.getElementById('habilidade').value;
+      const tipo = document.getElementById('tipo').value;
+      // Opções avançadas
+      const onda = document.getElementById('onda') ? document.getElementById('onda').value : null;
+      const paddle = document.getElementById('paddle') ? document.getElementById('paddle').value : null;
+      const velocidade = document.getElementById('velocidade') ? document.getElementById('velocidade').value : null;
+      const categoria = document.getElementById('categoria') ? document.getElementById('categoria').value : null;
+      const volume = calcularVolume(peso, habilidade, tipo, condicao, frequencia, onda, paddle, velocidade);
+      document.getElementById('resultado').innerHTML = `<b>Volume ideal:</b> ${volume} litros`;
+      document.getElementById('recomendacoes').innerHTML = '<em>Buscando pranchas recomendadas...</em>';
+      // Chamada à API da NuvemShop (exemplo fictício, precisa de token e endpoint real)
+      try {
+        // Exemplo: buscar produtos com "volume" próximo ao calculado
+        // Substitua 'YOUR_ACCESS_TOKEN' e 'YOUR_STORE_ID' pelos valores reais
+        const response = await fetch('nuvemshop-proxy.php');
+        const produtos = await response.json();
+        // Filtrar produtos por volume (assumindo que "volume" está na descrição ou nome)
+        const recomendadas = produtos.filter(prod => {
+          const texto = (prod.name || '') + ' ' + (prod.description || '');
+          const match = texto.match(/(\d{1,3}(?:[\.,]\d{1,2})?) ?l/i);
+          if (match) {
+            const vol = parseFloat(match[1].replace(',', '.'));
+            const categoriaMatch = categoria ? (texto.toLowerCase().includes(categoria)) : true;
+            return Math.abs(vol - volume) <= 3 && categoriaMatch; // tolerância de 3 litros e categoria
+          }
+          return false;
+        });
+        if (recomendadas.length === 0) {
+          document.getElementById('recomendacoes').innerHTML = '<b>Nenhuma prancha encontrada com volume próximo.</b>';
+        } else {
+          document.getElementById('recomendacoes').innerHTML = '<b>Pranchas recomendadas:</b><br>' + recomendadas.map(prod => `
+            <div class="board">
+              <b>${prod.name}</b><br>
+              ${prod.images && prod.images[0] ? `<img src="${prod.images[0].src}" alt="${prod.name}" style="max-width:120px;">` : ''}<br>
+              ${prod.description ? prod.description.substring(0, 120) + '...' : ''}
+            </div>
+          `).join('');
+        }
+      } catch (err) {
+        document.getElementById('recomendacoes').innerHTML = '<b>Erro ao buscar pranchas na loja.</b>';
+      }
+    };
+  </script>
+</body>
+</html>
