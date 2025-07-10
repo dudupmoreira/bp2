@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teste Calculadora</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; }
+        .test-section { margin: 20px 0; padding: 15px; border: 1px solid #ccc; }
+        .result { margin: 10px 0; padding: 10px; background: #f0f0f0; }
+        .error { background: #ffe6e6; color: #c00; }
+        .success { background: #e6ffe6; color: #060; }
+    </style>
+</head>
+<body>
+    <h1>🧪 Teste da Calculadora</h1>
+    
+    <div class="test-section">
+        <h3>Teste 1: Conectividade Básica</h3>
+        <button onclick="testBasicConnection()">Testar Conexão</button>
+        <div id="result1" class="result"></div>
+    </div>
+    
+    <div class="test-section">
+        <h3>Teste 2: Busca com Volume 30L</h3>
+        <button onclick="testVolumeSearch()">Buscar Pranchas</button>
+        <div id="result2" class="result"></div>
+    </div>
+    
+    <div class="test-section">
+        <h3>Teste 3: Simular Cálculo Completo</h3>
+        <button onclick="testFullCalculation()">Simular Cálculo</button>
+        <div id="result3" class="result"></div>
+    </div>
+
+    <script>
+        async function testBasicConnection() {
+            const resultDiv = document.getElementById('result1');
+            resultDiv.innerHTML = '🔄 Testando...';
+            
+            try {
+                const response = await fetch('https://bp2.ocoworks.com/nuvemshop-proxy-vps.php', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        volume_min: 0,
+                        volume_max: 999,
+                        categoria: 'todas'
+                    })
+                });
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}`);
+                }
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    resultDiv.innerHTML = `
+                        <div class="success">
+                            ✅ Conexão OK<br>
+                            📊 ${data.products.length} produtos encontrados<br>
+                            🕒 Cache: ${data.from_cache ? 'Sim' : 'Não'}
+                        </div>
+                    `;
+                } else {
+                    resultDiv.innerHTML = `
+                        <div class="error">
+                            ❌ Erro: ${data.error || 'Desconhecido'}
+                        </div>
+                    `;
+                }
+            } catch (error) {
+                resultDiv.innerHTML = `
+                    <div class="error">
+                        ❌ Erro de conexão: ${error.message}
+                    </div>
+                `;
+            }
+        }
+        
+        async function testVolumeSearch() {
+            const resultDiv = document.getElementById('result2');
+            resultDiv.innerHTML = '🔄 Buscando...';
+            
+            try {
+                const response = await fetch('https://bp2.ocoworks.com/nuvemshop-proxy-vps.php', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        volume_min: 25,
+                        volume_max: 35,
+                        categoria: 'todas'
+                    })
+                });
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}`);
+                }
+                
+                const data = await response.json();
+                
+                if (data.success && data.products.length > 0) {
+                    const pranchas = data.products.slice(0, 5);
+                    let html = `
+                        <div class="success">
+                            ✅ Encontrados ${data.products.length} produtos<br>
+                            📋 Primeiras 5 pranchas:
+                        </div>
+                        <ul>
+                    `;
+                    
+                    pranchas.forEach(prancha => {
+                        html += `
+                            <li><strong>${prancha.name}</strong> - ${prancha.volume}L (${prancha.categoria})</li>
+                        `;
+                    });
+                    
+                    html += '</ul>';
+                    resultDiv.innerHTML = html;
+                } else {
+                    resultDiv.innerHTML = `
+                        <div class="error">
+                            ❌ Nenhuma prancha encontrada
+                        </div>
+                    `;
+                }
+            } catch (error) {
+                resultDiv.innerHTML = `
+                    <div class="error">
+                        ❌ Erro: ${error.message}
+                    </div>
+                `;
+            }
+        }
+        
+        async function testFullCalculation() {
+            const resultDiv = document.getElementById('result3');
+            resultDiv.innerHTML = '🔄 Simulando cálculo...';
+            
+            // Simular cálculo de volume
+            const peso = 70; // kg
+            const habilidade = 'intermediario';
+            const gf = 0.42;
+            
+            // Cálculo simplificado
+            const pesoLbs = peso * 2.20462;
+            const volume = Math.round((pesoLbs * gf) * 10) / 10;
+            
+            resultDiv.innerHTML = `
+                <div class="success">
+                    📊 Volume calculado: ${volume}L<br>
+                    🔍 Buscando pranchas...
+                </div>
+            `;
+            
+            try {
+                const tolerancia = Math.max(volume * 0.30, 8);
+                const volumeMin = volume - tolerancia;
+                const volumeMax = volume + tolerancia;
+                
+                const response = await fetch('https://bp2.ocoworks.com/nuvemshop-proxy-vps.php', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        volume_min: volumeMin,
+                        volume_max: volumeMax,
+                        categoria: 'todas'
+                    })
+                });
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}`);
+                }
+                
+                const data = await response.json();
+                
+                if (data.success && data.products.length > 0) {
+                    const pranchas = data.products.sort((a, b) => {
+                        const diffA = Math.abs(a.volume - volume);
+                        const diffB = Math.abs(b.volume - volume);
+                        return diffA - diffB;
+                    }).slice(0, 3);
+                    
+                    let html = `
+                        <div class="success">
+                            ✅ Cálculo completo funcionando!<br>
+                            📊 Volume: ${volume}L ± ${tolerancia}L<br>
+                            🏄 Encontradas ${data.products.length} pranchas<br>
+                            🎯 Top 3 recomendações:
+                        </div>
+                        <ul>
+                    `;
+                    
+                    pranchas.forEach(prancha => {
+                        const diferenca = Math.abs(prancha.volume - volume);
+                        const diferencaPercentual = ((diferenca / volume) * 100).toFixed(1);
+                        html += `
+                            <li><strong>${prancha.name}</strong><br>
+                                📏 ${prancha.volume}L (${diferencaPercentual}% ${prancha.volume > volume ? 'maior' : 'menor'})<br>
+                                🏷️ ${prancha.categoria}
+                            </li>
+                        `;
+                    });
+                    
+                    html += '</ul>';
+                    resultDiv.innerHTML = html;
+                } else {
+                    resultDiv.innerHTML = `
+                        <div class="error">
+                            ❌ Nenhuma prancha encontrada para volume ${volume}L
+                        </div>
+                    `;
+                }
+            } catch (error) {
+                resultDiv.innerHTML = `
+                    <div class="error">
+                        ❌ Erro na busca: ${error.message}
+                    </div>
+                `;
+            }
+        }
+    </script>
+</body>
+</html> 

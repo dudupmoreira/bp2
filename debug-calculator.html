@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Debug Calculadora</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; }
+        .debug-section { margin: 20px 0; padding: 15px; border: 1px solid #ccc; }
+        .log { background: #f8f9fa; padding: 10px; margin: 10px 0; border-left: 4px solid #007bff; }
+        .error { border-left-color: #dc3545; }
+        .success { border-left-color: #28a745; }
+    </style>
+</head>
+<body>
+    <h1>🐛 Debug da Calculadora</h1>
+    
+    <div class="debug-section">
+        <h3>Teste de Cálculo</h3>
+        <button onclick="testCalculation()">Testar Cálculo</button>
+        <div id="calculation-log"></div>
+    </div>
+    
+    <div class="debug-section">
+        <h3>Teste de Busca</h3>
+        <button onclick="testSearch()">Testar Busca</button>
+        <div id="search-log"></div>
+    </div>
+    
+    <div class="debug-section">
+        <h3>Teste Completo</h3>
+        <button onclick="testComplete()">Teste Completo</button>
+        <div id="complete-log"></div>
+    </div>
+
+    <script>
+        function log(message, type = 'info') {
+            const timestamp = new Date().toLocaleTimeString();
+            const logDiv = document.createElement('div');
+            logDiv.className = `log ${type}`;
+            logDiv.innerHTML = `[${timestamp}] ${message}`;
+            
+            // Adicionar ao log apropriado baseado no contexto
+            if (message.includes('Cálculo')) {
+                document.getElementById('calculation-log').appendChild(logDiv);
+            } else if (message.includes('Busca')) {
+                document.getElementById('search-log').appendChild(logDiv);
+            } else {
+                document.getElementById('complete-log').appendChild(logDiv);
+            }
+        }
+        
+        function getGuildFactor(habilidade) {
+            switch (habilidade) {
+                case 'pro': return 0.33;
+                case 'avancado': return 0.36;
+                case 'intermediario': return 0.40;
+                case 'iniciante': return 0.52;
+                default: return 0.38;
+            }
+        }
+        
+        function calcularVolume(peso, habilidade, idade, condicao, onda, gfManual) {
+            let gf = gfManual !== undefined && gfManual !== null ? gfManual : getGuildFactor(habilidade);
+            let volume = peso * gf;
+            
+            // Ajustes finos
+            if (idade > 45) volume += 2;
+            if (condicao === 'baixo') volume += 2;
+            if (onda === 'pequena') volume += 3;
+            if (onda === 'grande') volume -= 3;
+            
+            return Math.round(volume * 10) / 10;
+        }
+        
+        async function testCalculation() {
+            log('🧮 Iniciando teste de cálculo...', 'info');
+            
+            // Teste com valores padrão
+            const peso = 70;
+            const habilidade = 'intermediario';
+            const idade = 30;
+            const condicao = 'medio';
+            const onda = null;
+            const gfManual = 0.42;
+            
+            log(`📊 Parâmetros: Peso=${peso}kg, Habilidade=${habilidade}, Idade=${idade}`, 'info');
+            
+            const volume = calcularVolume(peso, habilidade, idade, condicao, onda, gfManual);
+            
+            log(`✅ Volume calculado: ${volume}L`, 'success');
+            log(`🔧 GF usado: ${gfManual}`, 'info');
+            
+            return volume;
+        }
+        
+        async function testSearch() {
+            log('🔍 Iniciando teste de busca...', 'info');
+            
+            const volume = 30; // Volume de teste
+            const tolerancia = Math.max(volume * 0.30, 8);
+            const volumeMin = volume - tolerancia;
+            const volumeMax = volume + tolerancia;
+            
+            log(`📊 Buscando: Volume ${volume}L ± ${tolerancia}L (${volumeMin}L - ${volumeMax}L)`, 'info');
+            
+            try {
+                const response = await fetch('https://bp2.ocoworks.com/nuvemshop-proxy-vps.php', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        volume_min: volumeMin,
+                        volume_max: volumeMax,
+                        categoria: 'todas'
+                    })
+                });
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}`);
+                }
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    log(`✅ Busca bem-sucedida! Encontrados ${data.products.length} produtos`, 'success');
+                    
+                    if (data.products.length > 0) {
+                        const pranchas = data.products.slice(0, 3);
+                        pranchas.forEach((prancha, index) => {
+                            const diferenca = Math.abs(prancha.volume - volume);
+                            const diferencaPercentual = ((diferenca / volume) * 100).toFixed(1);
+                            log(`🏄 ${index + 1}. ${prancha.name} - ${prancha.volume}L (${diferencaPercentual}% ${prancha.volume > volume ? 'maior' : 'menor'})`, 'success');
+                        });
+                    }
+                } else {
+                    log(`❌ Erro na busca: ${data.error || 'Desconhecido'}`, 'error');
+                }
+            } catch (error) {
+                log(`❌ Erro de conexão: ${error.message}`, 'error');
+            }
+        }
+        
+        async function testComplete() {
+            log('🚀 Iniciando teste completo...', 'info');
+            
+            // 1. Testar cálculo
+            const volume = await testCalculation();
+            
+            // 2. Testar busca com o volume calculado
+            log('🔍 Testando busca com volume calculado...', 'info');
+            
+            const tolerancia = Math.max(volume * 0.30, 8);
+            const volumeMin = volume - tolerancia;
+            const volumeMax = volume + tolerancia;
+            
+            log(`📊 Buscando: Volume ${volume}L ± ${tolerancia}L (${volumeMin}L - ${volumeMax}L)`, 'info');
+            
+            try {
+                const response = await fetch('https://bp2.ocoworks.com/nuvemshop-proxy-vps.php', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        volume_min: volumeMin,
+                        volume_max: volumeMax,
+                        categoria: 'todas'
+                    })
+                });
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}`);
+                }
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    log(`✅ Busca bem-sucedida! Encontrados ${data.products.length} produtos`, 'success');
+                    
+                    if (data.products.length > 0) {
+                        // Ordenar por proximidade
+                        const pranchas = data.products.sort((a, b) => {
+                            const diffA = Math.abs(a.volume - volume);
+                            const diffB = Math.abs(b.volume - volume);
+                            return diffA - diffB;
+                        }).slice(0, 5);
+                        
+                        log('🎯 Top 5 recomendações:', 'success');
+                        pranchas.forEach((prancha, index) => {
+                            const diferenca = Math.abs(prancha.volume - volume);
+                            const diferencaPercentual = ((diferenca / volume) * 100).toFixed(1);
+                            log(`${index + 1}. ${prancha.name} - ${prancha.volume}L (${diferencaPercentual}% ${prancha.volume > volume ? 'maior' : 'menor'}) - ${prancha.categoria}`, 'success');
+                        });
+                    } else {
+                        log('⚠️ Nenhuma prancha encontrada com o volume calculado', 'error');
+                    }
+                } else {
+                    log(`❌ Erro na busca: ${data.error || 'Desconhecido'}`, 'error');
+                }
+            } catch (error) {
+                log(`❌ Erro de conexão: ${error.message}`, 'error');
+            }
+        }
+    </script>
+</body>
+</html> 

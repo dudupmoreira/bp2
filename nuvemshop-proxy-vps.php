@@ -103,6 +103,13 @@ function processProductsVPS($products) {
     foreach ($products as $product) {
         $stats['total']++;
         
+        // FILTRO: Exibir na loja e estoque > 0
+        $exibir = isset($product['show_in_store']) ? $product['show_in_store'] : (isset($product['exibir_na_loja']) ? $product['exibir_na_loja'] : null);
+        if (is_array($exibir)) $exibir = reset($exibir);
+        if (strtoupper($exibir) !== 'SIM') continue;
+        $stock = $product['stock'] ?? null;
+        if ($stock === null || $stock <= 0) continue;
+        
         // Extrair nome
         $productName = $product['name'] ?? '';
         if (is_array($productName)) {
@@ -120,8 +127,6 @@ function processProductsVPS($products) {
                 if (is_array($variantName)) {
                     $variantName = reset($variantName);
                 }
-                
-                // Buscar volume no nome da variação
                 if (preg_match('/(\d{1,3}(?:[\.,]\d{1,2})?)L/i', $variantName, $matches)) {
                     $volume = floatval(str_replace(',', '.', $matches[1]));
                     if ($volume >= 10 && $volume <= 200) {
@@ -129,20 +134,14 @@ function processProductsVPS($products) {
                         break;
                     }
                 }
-                
-                // Buscar tamanho no nome da variação
                 if (preg_match('/(\d+\'?\d*["\"]?)/i', $variantName, $matches)) {
                     $size = $matches[1];
                 }
-                
-                // Buscar nas opções da variação
                 if (isset($var['option1']) && !empty($var['option1'])) {
                     $size = $var['option1'];
                 }
             }
         }
-        
-        // Se não achou nas variações, buscar no nome do produto
         if (!$volume) {
             if (preg_match('/(\d{1,3}(?:[\.,]\d{1,2})?)L/i', $productName, $matches)) {
                 $volume = floatval(str_replace(',', '.', $matches[1]));
@@ -151,11 +150,8 @@ function processProductsVPS($products) {
                 }
             }
         }
-        
         if ($volume) $stats['com_volume']++;
         if ($size) $stats['com_tamanho']++;
-        
-        // Processar imagens
         $images = [];
         if (isset($product['images']) && is_array($product['images'])) {
             foreach ($product['images'] as $image) {
@@ -164,12 +160,8 @@ function processProductsVPS($products) {
                 }
             }
         }
-        
-        // Determinar categoria com análise detalhada
-        $categoria = 'shortboard'; // padrão
+        $categoria = 'shortboard';
         $text_lower = strtolower($productName);
-        
-        // Análise detalhada de categorias
         if (strpos($text_lower, 'fish') !== false || strpos($text_lower, 'twin') !== false || strpos($text_lower, 'twinny') !== false) {
             $categoria = 'fish';
         } elseif (strpos($text_lower, 'longboard') !== false || strpos($text_lower, 'long board') !== false || strpos($text_lower, 'malibu') !== false) {
@@ -187,9 +179,10 @@ function processProductsVPS($products) {
         } elseif (strpos($text_lower, 'retro') !== false || strpos($text_lower, 'single fin') !== false) {
             $categoria = 'retro';
         }
-        
         $stats['categorias'][$categoria] = ($stats['categorias'][$categoria] ?? 0) + 1;
-        
+        // MARCA
+        $brand = $product['brand'] ?? ($product['marca'] ?? null);
+        if (is_array($brand)) $brand = reset($brand);
         $processed[] = [
             'id' => $product['id'],
             'name' => $productName,
@@ -200,10 +193,10 @@ function processProductsVPS($products) {
             'images' => $images,
             'handle' => $product['handle'] ?? '',
             'price' => $product['price'] ?? null,
-            'stock' => $product['stock'] ?? null
+            'stock' => $stock,
+            'brand' => $brand
         ];
     }
-    
     vpsLog("Estatísticas: " . json_encode($stats));
     return $processed;
 }

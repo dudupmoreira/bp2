@@ -31,25 +31,25 @@ function fetchProducts($store_id, $token) {
     $url = "https://api.nuvemshop.com.br/v1/{$store_id}/products?fields=id,name,variants,images,description,handle,price,compare_at_price,stock,weight,height,width,length&limit=" . MAX_PRODUCTS_PER_REQUEST;
     
     debugLog("Fazendo requisição para: " . $url);
-    
-    $ch = curl_init($url);
-    curl_setopt($ch, CURLOPT_HTTPHEADER, [
+
+$ch = curl_init($url);
+curl_setopt($ch, CURLOPT_HTTPHEADER, [
         "Authentication: bearer {$token}",
         "Content-Type: application/json",
         "User-Agent: Surfboard-Calculator/1.0"
-    ]);
-    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+]);
+curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
     curl_setopt($ch, CURLOPT_TIMEOUT, API_TIMEOUT);
     curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, true);
     curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
     curl_setopt($ch, CURLOPT_MAXREDIRS, 3);
-    
-    $response = curl_exec($ch);
-    $httpcode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+
+$response = curl_exec($ch);
+$httpcode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
     $error = curl_error($ch);
     $info = curl_getinfo($ch);
-    curl_close($ch);
-    
+curl_close($ch);
+
     debugLog("HTTP Code: " . $httpcode);
     debugLog("cURL Info: " . json_encode($info));
     

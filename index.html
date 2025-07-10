@@ -1,0 +1,1014 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Calculadora de Volume - Board's Point</title>
+  
+  <!-- Meta tags para SEO -->
+  <meta name="description" content="Encontre a prancha perfeita com nossa calculadora de volume. Board's Point - Especialistas em surf.">
+  <meta name="keywords" content="surf, prancha, volume, calculadora, board point">
+  <meta name="author" content="Board's Point">
+  
+  <!-- Open Graph -->
+  <meta property="og:title" content="Calculadora de Volume de Prancha - Board's Point">
+  <meta property="og:description" content="Encontre a prancha perfeita com nossa calculadora de volume. Board's Point - Especialistas em surf.">
+  <meta property="og:image" content="https://bp.ocoworks.com/og-image.jpg">
+  <meta property="og:url" content="https://bp.ocoworks.com/surfboard-volume-calculator.html">
+  <meta property="og:type" content="website">
+  
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Calculadora de Volume de Prancha - Board's Point">
+  <meta name="twitter:description" content="Encontre a prancha perfeita com nossa calculadora de volume. Board's Point - Especialistas em surf.">
+  <meta name="twitter:image" content="https://bp.ocoworks.com/og-image.jpg">
+  
+  <!-- Canonical URL -->
+  <link rel="canonical" href="https://bp.ocoworks.com/surfboard-volume-calculator.html">
+  
+  <style>
+    * { 
+      box-sizing: border-box; 
+      margin: 0;
+      padding: 0;
+    }
+    
+    body { 
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+      background: #f8f9fa;
+      color: #333;
+      line-height: 1.6;
+    }
+    
+    /* Header estilo Board's Point */
+    .header {
+      background: #fff;
+      border-bottom: 1px solid #e9ecef;
+      padding: 1rem 0;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    
+    .header-content {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    
+    .logo {
+      display: flex;
+      align-items: center;
+      height: 44px;
+      text-decoration: none;
+    }
+    
+    .logo img {
+      height: 44px;
+      width: auto;
+      display: block;
+    }
+    
+    /* Container principal */
+    .container { 
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 2rem 20px;
+    }
+    
+    .page-title {
+      text-align: center;
+      margin-bottom: 2rem;
+      color: #333;
+      font-size: 2.5rem;
+      font-weight: 300;
+    }
+    
+    .subtitle {
+      text-align: center;
+      color: #6c757d;
+      margin-bottom: 3rem;
+      font-size: 1.1rem;
+    }
+    
+    /* Formulário estilo Board's Point */
+    .calculator-section {
+      background: #fff;
+      border-radius: 8px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+      padding: 2rem;
+      margin-bottom: 2rem;
+    }
+    
+    .form-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 1.5rem;
+      margin-bottom: 2rem;
+    }
+    
+    .form-group { 
+      margin-bottom: 0;
+    }
+    
+    label { 
+      display: block; 
+      margin-bottom: 0.5rem;
+      font-weight: 600;
+      color: #333;
+      font-size: 0.9rem;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    
+    select, input { 
+      width: 100%; 
+      padding: 0.75rem 1rem; 
+      border-radius: 4px; 
+      border: 1px solid #ced4da;
+      font-size: 1rem;
+      transition: all 0.3s ease;
+      background: #fff;
+    }
+    
+    select:focus, input:focus {
+      outline: none;
+      border-color: #007bff;
+      box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.1);
+    }
+    
+    .btn {
+      padding: 1rem 2rem;
+      border: none;
+      border-radius: 4px;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    
+    .btn-primary {
+      background: #007bff;
+      color: white;
+      width: 100%;
+    }
+    
+    .btn-primary:hover {
+      background: #0056b3;
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(0, 123, 255, 0.3);
+    }
+    
+    .btn-secondary {
+      background: #6c757d;
+      color: white;
+      margin-top: 1rem;
+    }
+    
+    .btn-secondary:hover {
+      background: #545b62;
+    }
+    
+    /* Resultado do volume */
+    .result { 
+      background: linear-gradient(135deg, #007bff 0%, #0056b3 100%);
+      color: white;
+      border-radius: 8px;
+      padding: 2rem;
+      text-align: center;
+      margin-bottom: 2rem;
+      box-shadow: 0 4px 15px rgba(0, 123, 255, 0.3);
+    }
+    
+    .volume-display {
+      font-size: 3rem;
+      font-weight: bold;
+      margin: 1rem 0;
+      text-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    }
+    
+    /* Loading */
+    .loading {
+      text-align: center;
+      padding: 3rem;
+      color: #6c757d;
+    }
+    
+    .spinner {
+      border: 4px solid #f3f3f3;
+      border-top: 4px solid #007bff;
+      border-radius: 50%;
+      width: 40px;
+      height: 40px;
+      animation: spin 1s linear infinite;
+      margin: 0 auto 1rem;
+    }
+    
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+    
+    /* Produtos recomendados */
+    .recommendations {
+      margin-top: 2rem;
+    }
+    
+    .recommendations-header {
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+    
+    .recommendations-title {
+      font-size: 2rem;
+      color: #333;
+      margin-bottom: 1rem;
+    }
+    
+    .volume-info {
+      background: #f8f9fa;
+      padding: 1rem;
+      border-radius: 4px;
+      margin-bottom: 2rem;
+    }
+    
+    .volume-badge {
+      display: inline-block;
+      background: #007bff;
+      color: white;
+      padding: 0.5rem 1rem;
+      border-radius: 20px;
+      font-weight: 600;
+      margin-bottom: 1rem;
+    }
+    
+    /* Grid de produtos estilo Board's Point */
+    .products-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 2rem;
+      margin-top: 2rem;
+    }
+    
+    .product-card {
+      background: #fff;
+      border-radius: 20px;
+      overflow: hidden;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.07);
+      border: 1.5px solid #e5e7eb;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 0 0 1.5rem 0;
+      transition: box-shadow 0.2s, transform 0.2s;
+    }
+    .product-card:hover {
+      box-shadow: 0 8px 32px rgba(0,0,0,0.13);
+      transform: translateY(-2px) scale(1.01);
+    }
+    .product-image {
+      width: 100%;
+      height: 260px;
+      object-fit: contain;
+      background: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 20px 20px 0 0;
+      margin-bottom: 0;
+      padding: 18px 0 18px 0;
+    }
+    .product-separator {
+      width: 90%;
+      height: 1.5px;
+      background: #ececec;
+      margin: 0 auto 1.2rem auto;
+      border: none;
+    }
+    .product-info {
+      width: 90%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 0;
+    }
+    .product-title {
+      font-size: 1.08rem;
+      font-weight: 700;
+      color: #222;
+      text-align: center;
+      margin-bottom: 0.7rem;
+      min-height: 48px;
+      line-height: 1.2;
+    }
+    .product-volume {
+      display: inline-block;
+      background: #22c55e;
+      color: #fff;
+      padding: 0.35rem 1.1rem;
+      border-radius: 16px;
+      font-size: 1rem;
+      font-weight: 600;
+      margin-bottom: 0.7rem;
+    }
+    .product-volume.warning {
+      background: #ffc107;
+      color: #333;
+    }
+    .product-volume.danger {
+      background: #dc3545;
+    }
+    .product-category {
+      color: #6c757d;
+      font-size: 0.97rem;
+      margin-bottom: 0.7rem;
+      width: 100%;
+      text-align: left;
+    }
+    .product-price {
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: #222;
+      margin-bottom: 0.2rem;
+      width: 100%;
+      text-align: left;
+    }
+    .product-price-pix {
+      color: #ff9800;
+      font-size: 1.08rem;
+      font-weight: 700;
+      margin-bottom: 0.2rem;
+      width: 100%;
+      text-align: left;
+    }
+    .product-parcelamento {
+      color: #888;
+      font-size: 0.98rem;
+      margin-bottom: 0.7rem;
+      width: 100%;
+      text-align: left;
+    }
+    .product-actions {
+      display: flex;
+      gap: 0.7rem;
+      margin-top: 1.1rem;
+      width: 100%;
+      justify-content: center;
+    }
+    .btn-sm {
+      padding: 0.55rem 1.2rem;
+      font-size: 1rem;
+      border-radius: 8px;
+      text-decoration: none;
+      display: inline-block;
+      text-align: center;
+      flex: none;
+      border: 1.5px solid #007bff;
+      background: #fff;
+      color: #007bff;
+      font-weight: 600;
+      transition: background 0.2s, color 0.2s;
+    }
+    .btn-sm:hover {
+      background: #007bff;
+      color: #fff;
+    }
+    .btn-outline {
+      border: 1.5px solid #b0b0b0;
+      color: #444;
+      background: #fff;
+    }
+    .btn-outline:hover {
+      background: #f5f5f5;
+      color: #222;
+    }
+    
+    /* Mensagens */
+    .alert {
+      padding: 1rem;
+      border-radius: 4px;
+      margin-bottom: 1rem;
+    }
+    
+    .alert-success {
+      background: #d4edda;
+      color: #155724;
+      border: 1px solid #c3e6cb;
+    }
+    
+    .alert-warning {
+      background: #fff3cd;
+      color: #856404;
+      border: 1px solid #ffeaa7;
+    }
+    
+    .alert-danger {
+      background: #f8d7da;
+      color: #721c24;
+      border: 1px solid #f5c6cb;
+    }
+    
+    .alert-info {
+      background: #d1ecf1;
+      color: #0c5460;
+      border: 1px solid #bee5eb;
+    }
+    
+    /* Footer estilo Board's Point */
+    .footer {
+      background: #333;
+      color: #fff;
+      padding: 2rem 0;
+      margin-top: 4rem;
+    }
+    
+    .footer-content {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 20px;
+      text-align: center;
+    }
+    
+    .footer a {
+      color: #fff;
+      text-decoration: none;
+    }
+    
+    .footer a:hover {
+      color: #007bff;
+    }
+    
+    /* Responsivo */
+    @media (max-width: 768px) {
+      .form-grid {
+        grid-template-columns: 1fr;
+      }
+      
+      .products-grid {
+        grid-template-columns: 1fr;
+      }
+      
+      .page-title {
+        font-size: 2rem;
+      }
+      
+      .container {
+        padding: 1rem 15px;
+      }
+    }
+    
+    /* Toggle avançado */
+    .advanced-toggle {
+      text-align: center;
+      margin: 2rem 0;
+    }
+    
+    .advanced-options {
+      display: none;
+      background: #f8f9fa;
+      padding: 1.5rem;
+      border-radius: 8px;
+      margin-top: 1rem;
+    }
+    
+    .advanced-options.show {
+      display: block;
+    }
+  </style>
+</head>
+<body>
+  <!-- Header -->
+  <header class="header">
+    <div class="header-content">
+      <a href="https://www.boardspoint.com.br" class="logo">
+        <img src="logo-boards-point.webp" alt="Board's Point" />
+      </a>
+      <div>
+        <span>📞 (27) 99830-0453</span>
+      </div>
+    </div>
+  </header>
+
+  <div class="container">
+    <h1 class="page-title">🏄‍♂️ Calculadora de Volume</h1>
+    <p class="subtitle">Encontre a prancha perfeita para você</p>
+    
+    <div class="calculator-section">
+      <form id="volumeForm">
+        <div class="form-grid">
+          <div class="form-group">
+            <label>Peso (kg)</label>
+            <input type="number" id="peso" required min="30" max="150" step="0.1" placeholder="Ex: 70">
+          </div>
+          
+          <div class="form-group">
+            <label>Altura (cm)</label>
+            <input type="number" id="altura" required min="120" max="220" placeholder="Ex: 175">
+          </div>
+          
+          <div class="form-group">
+            <label>Idade</label>
+            <input type="number" id="idade" required min="10" max="80" placeholder="Ex: 30">
+          </div>
+          
+          <div class="form-group">
+            <label>Habilidade</label>
+            <select id="habilidade" required>
+              <option value="">Selecione...</option>
+              <option value="iniciante">Iniciante</option>
+              <option value="intermediario">Intermediário</option>
+              <option value="avancado">Avançado</option>
+              <option value="pro">Profissional</option>
+            </select>
+          </div>
+          
+          <div class="form-group">
+            <label>Condicionamento Físico</label>
+            <select id="condicao" required>
+              <option value="">Selecione...</option>
+              <option value="baixo">Baixo</option>
+              <option value="medio">Médio</option>
+              <option value="alto">Alto</option>
+            </select>
+          </div>
+          
+          <div class="form-group">
+            <label>Frequência de Surf</label>
+            <select id="frequencia" required>
+              <option value="">Selecione...</option>
+              <option value="nunca">Nunca</option>
+              <option value="mensal">Mensal</option>
+              <option value="semanal">Semanal</option>
+              <option value="diario">Diário</option>
+            </select>
+          </div>
+        </div>
+        
+        <div class="advanced-toggle">
+          <button type="button" class="btn btn-secondary" onclick="toggleAdvanced()">
+            ⚙️ Configurações Avançadas
+          </button>
+        </div>
+        
+        <div id="advancedOptions" class="advanced-options">
+          <div class="form-grid">
+            <div class="form-group">
+              <label>Tamanho das Ondas</label>
+              <select id="onda">
+                <option value="">Não especificado</option>
+                <option value="pequena">0-2ft (0-0,6m)</option>
+                <option value="media">2-4ft (0,6-1,2m)</option>
+                <option value="grande">4-6ft (1,2-1,8m)</option>
+                <option value="muito-grande">6-8ft (1,8-2,4m)</option>
+                <option value="enorme">8ft+ (2,4m+)</option>
+              </select>
+            </div>
+            
+            <div class="form-group">
+              <label>Paddle Power</label>
+              <select id="paddle">
+                <option value="">Selecione...</option>
+                <option value="1">1 (baixo)</option>
+                <option value="2">2</option>
+                <option value="3">3 (médio)</option>
+                <option value="4">4</option>
+                <option value="5">5 (alto)</option>
+              </select>
+            </div>
+            
+            <div class="form-group">
+              <label>Velocidade</label>
+              <select id="velocidade">
+                <option value="">Selecione...</option>
+                <option value="1">1 (baixa)</option>
+                <option value="2">2</option>
+                <option value="3">3 (média)</option>
+                <option value="4">4</option>
+                <option value="5">5 (alta)</option>
+              </select>
+            </div>
+            
+            <div class="form-group">
+              <label>Categoria da Prancha</label>
+              <select id="categoria">
+                <option value="">Todas as categorias</option>
+                <option value="shortboard">Shortboard</option>
+                <option value="funboard">Funboard</option>
+                <option value="longboard">Longboard</option>
+                <option value="fish">Fish</option>
+                <option value="retro">Retro</option>
+                <option value="step-up">Step Up</option>
+                <option value="big-wave">Big Wave</option>
+                <option value="grom">Grom</option>
+              </select>
+            </div>
+          </div>
+          
+          <div class="form-group">
+            <label>Guild Factor (GF)</label>
+            <input type="range" id="gf" min="0.30" max="0.60" step="0.01" value="0.42">
+            <div style="text-align: center; margin-top: 0.5rem;">
+              <span id="gf-value">0.42</span>
+              <small style="color: #6c757d; display: block; margin-top: 0.25rem;">
+                GF recomendado: 0.30-0.36 (avançado), 0.38-0.42 (intermediário), 0.50-0.55 (iniciante)
+              </small>
+            </div>
+          </div>
+        </div>
+        
+        <button type="submit" class="btn btn-primary">
+          🏄‍♂️ Calcular Volume e Buscar Pranchas
+        </button>
+      </form>
+    </div>
+    
+    <div id="resultado" class="result" style="display: none;"></div>
+    
+    <div id="resultados"></div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="footer-content">
+      <p>Desenvolvido com ❤️ pela <a href="https://www.boardspoint.com.br" target="_blank">Board's Point</a></p>
+      <p>Baseado no Guild Factor de John Whitney Guild</p>
+      <p>📞 (27) 99830-0453 | 📧 contato@boardspoint.com</p>
+    </div>
+  </footer>
+
+  <script>
+    // Debug function
+    function debugLog(message) {
+      console.log(`[DEBUG] ${message}`);
+    }
+    
+    // Toggle advanced options
+    function toggleAdvanced() {
+      const advanced = document.getElementById('advancedOptions');
+      advanced.classList.toggle('show');
+    }
+    
+    // Validação em tempo real
+    function validateForm() {
+      const peso = parseFloat(document.getElementById('peso').value);
+      const altura = parseInt(document.getElementById('altura').value);
+      const idade = parseInt(document.getElementById('idade').value);
+      
+      let isValid = true;
+      let message = '';
+      
+      if (peso < 30 || peso > 150) {
+        message += 'Peso deve estar entre 30 e 150 kg.\n';
+        isValid = false;
+      }
+      
+      if (altura < 120 || altura > 220) {
+        message += 'Altura deve estar entre 120 e 220 cm.\n';
+        isValid = false;
+      }
+      
+      if (idade < 10 || idade > 80) {
+        message += 'Idade deve estar entre 10 e 80 anos.\n';
+        isValid = false;
+      }
+      
+      return { isValid, message };
+    }
+
+    // Função para sugerir GF padrão por habilidade
+    function getGuildFactor(habilidade) {
+      switch (habilidade) {
+        case 'pro':
+          return 0.33;
+        case 'avancado':
+          return 0.36;
+        case 'intermediario':
+          return 0.40;
+        case 'iniciante':
+          return 0.52;
+        default:
+          return 0.38;
+      }
+    }
+
+    // Algoritmo de cálculo de volume usando GF ajustável
+    function calcularVolume(peso, habilidade, idade, condicao, onda, gfManual) {
+      let gf = gfManual !== undefined && gfManual !== null ? gfManual : getGuildFactor(habilidade);
+      let volume = peso * gf;
+      
+      // Ajustes finos
+      if (idade > 45) volume += 2;
+      if (condicao === 'baixo') volume += 2;
+      if (onda === 'pequena') volume += 3;
+      if (onda === 'grande') volume -= 3;
+      
+      return Math.round(volume * 10) / 10;
+    }
+
+    // Atualizar GF sugerido ao mudar habilidade
+    document.getElementById('habilidade').addEventListener('change', function() {
+      const habilidade = this.value;
+      const gfSugerido = getGuildFactor(habilidade);
+      const gfSlider = document.getElementById('gf');
+      gfSlider.value = gfSugerido;
+      document.getElementById('gf-value').innerText = gfSugerido;
+    });
+
+    // Atualizar valor do slider em tempo real
+    document.getElementById('gf').addEventListener('input', function() {
+      document.getElementById('gf-value').innerText = this.value;
+    });
+
+    // Função para obter recomendação baseada no volume
+    function getRecomendacao(volume, habilidade) {
+      if (volume < 30) {
+        return "Considere uma prancha maior para mais estabilidade.";
+      } else if (volume > 80) {
+        return "Você pode usar uma prancha menor para mais manobrabilidade.";
+      } else {
+        return "Volume ideal para seu perfil!";
+      }
+    }
+
+    // Função para mostrar loading
+    function showLoading(show) {
+      const resultadosDiv = document.getElementById('resultados');
+      if (show) {
+        resultadosDiv.innerHTML = `
+          <div class="loading">
+            <div class="spinner"></div>
+            <p>🔍 Buscando pranchas recomendadas...</p>
+          </div>
+        `;
+      }
+    }
+
+    // Função para mostrar resultados
+    function mostrarResultados(pranchas, volumeCalculado, buscaAmpliada = false) {
+      debugLog(`Mostrando ${pranchas.length} pranchas para volume ${volumeCalculado}L`);
+      
+      const resultadosDiv = document.getElementById('resultados');
+      
+      if (!pranchas || pranchas.length === 0) {
+        resultadosDiv.innerHTML = `
+          <div class="alert alert-warning">
+            <h4>Nenhuma prancha encontrada</h4>
+            <p>Não encontramos pranchas com o volume calculado (${volumeCalculado}L).</p>
+            <p>Tente:</p>
+            <ul>
+              <li>Ajustar os parâmetros de cálculo</li>
+              <li>Verificar se há produtos cadastrados na loja</li>
+              <li>Testar com diferentes categorias de prancha</li>
+            </ul>
+          </div>
+        `;
+        return;
+      }
+      
+      let html = `
+        <div class="recommendations">
+          <div class="recommendations-header">
+            <h2 class="recommendations-title">🏄‍♂️ Pranchas Recomendadas</h2>
+            <div class="volume-info">
+              <span class="volume-badge">Volume Calculado: ${volumeCalculado}L</span>
+              <p style="margin: 0; color: #6c757d; font-size: 0.9rem;">
+                Baseado no Guild Factor de John Whitney Guild
+              </p>
+              ${buscaAmpliada ? '<p style="margin: 0.5rem 0 0 0; color: #ffc107; font-size: 0.9rem;">⚠️ Busca ampliada para encontrar mais opções</p>' : ''}
+            </div>
+          </div>
+          
+          <div class="products-grid">
+      `;
+      
+      pranchas.forEach((prancha, index) => {
+        const diferenca = Math.abs(prancha.volume - volumeCalculado);
+        const diferencaPercentual = ((diferenca / volumeCalculado) * 100).toFixed(1);
+        
+        let volumeClass = 'product-volume';
+        if (diferencaPercentual > 15) volumeClass += ' warning';
+        if (diferencaPercentual > 25) volumeClass += ' danger';
+        
+        html += `
+          <div class="product-card">
+            ${prancha.images && prancha.images.length > 0 ? `
+              <img src="${prancha.images[0].src}" class="product-image" alt="${prancha.name}">
+            ` : `
+              <div class="product-image">🏄‍♂️</div>
+            `}
+            <hr class="product-separator" />
+            <div class="product-info">
+              <div class="product-title">${prancha.name}</div>
+              <div class="${volumeClass}">
+                ${prancha.volume}L <small>(${diferencaPercentual}% ${prancha.volume > volumeCalculado ? 'maior' : 'menor'})</small>
+              </div>
+              <div class="product-category">
+                <strong>Categoria:</strong> ${prancha.categoria}
+              </div>
+              ${prancha.price ? `<div class="product-price">R$${prancha.price.toLocaleString('pt-BR', {minimumFractionDigits:2})}</div>` : ''}
+              ${prancha.price_pix ? `<div class="product-price-pix">R$${prancha.price_pix.toLocaleString('pt-BR', {minimumFractionDigits:2})} com Pix</div>` : ''}
+              ${prancha.parcelamento ? `<div class="product-parcelamento">${prancha.parcelamento}</div>` : ''}
+              <div class="product-actions">
+                <a href="https://www.boardspoint.com.br/produto/${prancha.handle.pt || prancha.handle}" target="_blank" class="btn-sm">
+                  🛒 Ver Produto
+                </a>
+                <button onclick="verDetalhes(${index})" class="btn-sm btn-outline">
+                  ℹ️ Detalhes
+                </button>
+              </div>
+            </div>
+          </div>
+        `;
+      });
+      
+      html += `
+          </div>
+          
+          <div class="alert alert-info" style="margin-top: 2rem;">
+            <h6>💡 Dicas para escolher sua prancha:</h6>
+            <ul style="margin: 0; padding-left: 1.5rem;">
+              <li>Pranchas com volume próximo ao calculado oferecem melhor flutuação</li>
+              <li>Considere sua experiência e condicionamento físico</li>
+              <li>Teste diferentes categorias para encontrar o que funciona melhor para você</li>
+              <li>O Guild Factor é uma referência - ajuste conforme sua preferência</li>
+            </ul>
+          </div>
+        </div>
+      `;
+      
+      resultadosDiv.innerHTML = html;
+      document.getElementById('resultados').scrollIntoView({ behavior: 'smooth' });
+    }
+
+    // Função para buscar pranchas recomendadas
+    async function buscarPranchas(volumeCalculado, categoria) {
+      debugLog(`Iniciando busca para volume ${volumeCalculado}L`);
+      
+      try {
+        showLoading(true);
+        
+        const tolerancia = Math.max(volumeCalculado * 0.30, 8);
+        const volumeMin = volumeCalculado - tolerancia;
+        const volumeMax = volumeCalculado + tolerancia;
+        
+        debugLog(`Buscando pranchas: Volume ${volumeCalculado}L ± ${tolerancia}L (${volumeMin}L - ${volumeMax}L)`);
+        
+        const response = await fetch('https://bp2.ocoworks.com/nuvemshop-proxy-vps.php', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            volume_min: volumeMin,
+            volume_max: volumeMax,
+            categoria: categoria || 'todas'
+          })
+        });
+        
+        debugLog(`Response status: ${response.status}`);
+        
+        if (!response.ok) {
+          throw new Error(`Erro HTTP: ${response.status}`);
+        }
+        
+        const data = await response.json();
+        debugLog(`Response data: ${JSON.stringify(data).substring(0, 200)}...`);
+        
+        if (data.success) {
+          const pranchas = data.products || [];
+          debugLog(`Encontrados ${pranchas.length} produtos`);
+          
+          if (pranchas.length > 0) {
+            pranchas.sort((a, b) => {
+              const diffA = Math.abs(a.volume - volumeCalculado);
+              const diffB = Math.abs(b.volume - volumeCalculado);
+              return diffA - diffB;
+            });
+            
+            const pranchasRecomendadas = pranchas.slice(0, 12);
+            mostrarResultados(pranchasRecomendadas, volumeCalculado);
+          } else {
+            const toleranciaAmpliada = Math.max(volumeCalculado * 0.50, 12);
+            const volumeMinAmpliado = volumeCalculado - toleranciaAmpliada;
+            const volumeMaxAmpliado = volumeCalculado + toleranciaAmpliada;
+            
+            debugLog(`Tentando busca ampliada: Volume ${volumeCalculado}L ± ${toleranciaAmpliada}L (${volumeMinAmpliado}L - ${volumeMaxAmpliado}L)`);
+            
+            const responseAmpliado = await fetch('https://bp2.ocoworks.com/nuvemshop-proxy-vps.php', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify({
+                volume_min: volumeMinAmpliado,
+                volume_max: volumeMaxAmpliado,
+                categoria: 'todas'
+              })
+            });
+            
+            if (responseAmpliado.ok) {
+              const dataAmpliado = await responseAmpliado.json();
+              if (dataAmpliado.success && dataAmpliado.products && dataAmpliado.products.length > 0) {
+                const pranchasAmpliadas = dataAmpliado.products.sort((a, b) => {
+                  const diffA = Math.abs(a.volume - volumeCalculado);
+                  const diffB = Math.abs(b.volume - volumeCalculado);
+                  return diffA - diffB;
+                }).slice(0, 8);
+                
+                mostrarResultados(pranchasAmpliadas, volumeCalculado, true);
+              } else {
+                mostrarMensagem('Nenhuma prancha encontrada. Verifique se há produtos cadastrados na loja ou se os volumes estão sendo extraídos corretamente.', 'warning');
+              }
+            } else {
+              mostrarMensagem('Nenhuma prancha encontrada com o volume calculado. Tente ajustar os parâmetros ou verifique se há produtos cadastrados.', 'warning');
+            }
+          }
+        } else {
+          throw new Error(data.error || 'Erro desconhecido');
+        }
+      } catch (error) {
+        debugLog(`Erro na busca: ${error.message}`);
+        console.error('Erro ao buscar pranchas:', error);
+        mostrarMensagem('Erro ao conectar com a loja. Verifique sua conexão e tente novamente.', 'error');
+      } finally {
+        showLoading(false);
+      }
+    }
+
+    // Função para mostrar mensagens
+    function mostrarMensagem(mensagem, tipo = 'info') {
+      const resultadosDiv = document.getElementById('resultados');
+      const alertClass = tipo === 'error' ? 'alert-danger' : tipo === 'warning' ? 'alert-warning' : 'alert-info';
+      
+      resultadosDiv.innerHTML = `
+        <div class="alert ${alertClass}">
+          <h4>${tipo === 'error' ? '❌ Erro' : tipo === 'warning' ? '⚠️ Aviso' : 'ℹ️ Informação'}</h4>
+          <p>${mensagem}</p>
+        </div>
+      `;
+      
+      document.getElementById('resultados').scrollIntoView({ behavior: 'smooth' });
+    }
+
+    // Handler do formulário
+    document.getElementById('volumeForm').onsubmit = async function(e) {
+      e.preventDefault();
+      debugLog('Formulário submetido');
+      
+      const validation = validateForm();
+      if (!validation.isValid) {
+        console.log('Validação falhou:', validation.message);
+        alert('Por favor, corrija os seguintes erros:\n' + validation.message);
+        return;
+      }
+      
+      console.log('Validação passou, calculando volume...');
+      
+      const peso = parseFloat(document.getElementById('peso').value);
+      const idade = parseInt(document.getElementById('idade').value);
+      const condicao = document.getElementById('condicao').value;
+      const habilidade = document.getElementById('habilidade').value;
+      const onda = document.getElementById('onda') ? document.getElementById('onda').value : null;
+      const categoria = document.getElementById('categoria') ? document.getElementById('categoria').value : null;
+      const gfManual = parseFloat(document.getElementById('gf').value);
+      
+      console.log('Parâmetros:', { peso, idade, condicao, habilidade, onda, categoria, gfManual });
+      
+      const volume = calcularVolume(peso, habilidade, idade, condicao, onda, gfManual);
+      const recomendacao = getRecomendacao(volume, habilidade);
+      
+      console.log('Volume calculado:', volume, 'Recomendação:', recomendacao);
+      
+      const resultadoDiv = document.getElementById('resultado');
+      resultadoDiv.innerHTML = `
+        <div class="volume-display">${volume}L</div>
+        <div><strong>Volume ideal calculado</strong></div>
+        <div style="margin-top: 12px; font-size: 0.9em;">${recomendacao}</div>
+        <div style="margin-top: 8px; font-size: 0.85em; color: #888;">GF usado: <b>${gfManual}</b></div>
+      `;
+      resultadoDiv.style.display = 'block';
+      
+      console.log('Iniciando busca de pranchas...');
+      await buscarPranchas(volume, categoria);
+      console.log('Busca de pranchas concluída');
+    };
+
+    // Validação em tempo real
+    document.querySelectorAll('input[type="number"]').forEach(input => {
+      input.addEventListener('blur', function() {
+        const validation = validateForm();
+        if (!validation.isValid) {
+          this.style.borderColor = '#dc3545';
+        } else {
+          this.style.borderColor = '#ced4da';
+        }
+      });
+    });
+    
+    debugLog('Calculadora carregada e pronta');
+  </script>
+</body>
+</html> 

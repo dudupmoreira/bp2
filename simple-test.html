@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teste Simples</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; }
+        .test { margin: 20px 0; padding: 15px; border: 1px solid #ccc; }
+        .result { margin: 10px 0; padding: 10px; background: #f0f0f0; }
+    </style>
+</head>
+<body>
+    <h1>🧪 Teste Simples da Calculadora</h1>
+    
+    <div class="test">
+        <h3>Teste de Cálculo e Busca</h3>
+        <button onclick="testar()">Testar Cálculo + Busca</button>
+        <div id="resultado"></div>
+    </div>
+
+    <script>
+        async function testar() {
+            const resultado = document.getElementById('resultado');
+            resultado.innerHTML = '🔄 Testando...';
+            
+            try {
+                // 1. Simular cálculo
+                const peso = 70;
+                const gf = 0.42;
+                const volume = Math.round((peso * gf) * 10) / 10;
+                
+                resultado.innerHTML = `
+                    <div style="background: #e6ffe6; padding: 10px; border-radius: 4px;">
+                        ✅ Volume calculado: ${volume}L
+                    </div>
+                    <div style="margin-top: 10px;">🔍 Buscando pranchas...</div>
+                `;
+                
+                // 2. Buscar pranchas
+                const tolerancia = Math.max(volume * 0.30, 8);
+                const volumeMin = volume - tolerancia;
+                const volumeMax = volume + tolerancia;
+                
+                console.log(`Buscando: ${volumeMin}L - ${volumeMax}L`);
+                
+                const response = await fetch('https://bp2.ocoworks.com/nuvemshop-proxy-vps.php', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        volume_min: volumeMin,
+                        volume_max: volumeMax,
+                        categoria: 'todas'
+                    })
+                });
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}`);
+                }
+                
+                const data = await response.json();
+                console.log('Response:', data);
+                
+                if (data.success && data.products && data.products.length > 0) {
+                    const pranchas = data.products.slice(0, 3);
+                    let html = `
+                        <div style="background: #e6ffe6; padding: 10px; border-radius: 4px; margin-top: 10px;">
+                            ✅ Encontrados ${data.products.length} produtos!
+                        </div>
+                        <div style="margin-top: 10px;">
+                            <h4>Top 3 Recomendações:</h4>
+                    `;
+                    
+                    pranchas.forEach((prancha, index) => {
+                        const diferenca = Math.abs(prancha.volume - volume);
+                        const diferencaPercentual = ((diferenca / volume) * 100).toFixed(1);
+                        html += `
+                            <div style="background: #f8f9fa; padding: 10px; margin: 5px 0; border-radius: 4px;">
+                                <strong>${index + 1}. ${prancha.name}</strong><br>
+                                📏 ${prancha.volume}L (${diferencaPercentual}% ${prancha.volume > volume ? 'maior' : 'menor'})<br>
+                                🏷️ ${prancha.categoria}
+                            </div>
+                        `;
+                    });
+                    
+                    html += '</div>';
+                    resultado.innerHTML += html;
+                } else {
+                    resultado.innerHTML += `
+                        <div style="background: #ffe6e6; padding: 10px; border-radius: 4px; margin-top: 10px;">
+                            ❌ Nenhuma prancha encontrada
+                        </div>
+                    `;
+                }
+            } catch (error) {
+                console.error('Erro:', error);
+                resultado.innerHTML += `
+                    <div style="background: #ffe6e6; padding: 10px; border-radius: 4px; margin-top: 10px;">
+                        ❌ Erro: ${error.message}
+                    </div>
+                `;
+            }
+        }
+    </script>
+</body>
+</html> 
