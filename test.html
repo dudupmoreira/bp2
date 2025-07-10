@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teste da API - Board's Point</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 40px; }
+        .test-section { margin: 20px 0; padding: 20px; border: 1px solid #ccc; }
+        .success { background: #d4edda; color: #155724; }
+        .error { background: #f8d7da; color: #721c24; }
+        pre { background: #f8f9fa; padding: 10px; border-radius: 4px; }
+    </style>
+</head>
+<body>
+    <h1>🧪 Teste da API Board's Point</h1>
+    
+    <div class="test-section">
+        <h2>Teste 1: Conexão com a API</h2>
+        <button onclick="testAPI()">Testar API</button>
+        <div id="api-result"></div>
+    </div>
+    
+    <div class="test-section">
+        <h2>Teste 2: Calculadora</h2>
+        <button onclick="testCalculator()">Testar Calculadora</button>
+        <div id="calc-result"></div>
+    </div>
+
+    <script>
+        async function testAPI() {
+            const resultDiv = document.getElementById('api-result');
+            resultDiv.innerHTML = '<p>Testando...</p>';
+            
+            try {
+                const response = await fetch('nuvemshop-proxy-simple.php');
+                const data = await response.json();
+                
+                if (data.error) {
+                    resultDiv.innerHTML = `
+                        <div class="error">
+                            <h3>❌ Erro na API</h3>
+                            <p><strong>Erro:</strong> ${data.error}</p>
+                        </div>
+                    `;
+                } else {
+                    resultDiv.innerHTML = `
+                        <div class="success">
+                            <h3>✅ API funcionando!</h3>
+                            <p><strong>Produtos encontrados:</strong> ${data.length}</p>
+                            <p><strong>Primeiros produtos:</strong></p>
+                            <pre>${JSON.stringify(data.slice(0, 3), null, 2)}</pre>
+                        </div>
+                    `;
+                }
+            } catch (error) {
+                resultDiv.innerHTML = `
+                    <div class="error">
+                        <h3>❌ Erro de conexão</h3>
+                        <p><strong>Erro:</strong> ${error.message}</p>
+                    </div>
+                `;
+            }
+        }
+        
+        function testCalculator() {
+            const resultDiv = document.getElementById('calc-result');
+            
+            // Simular cálculo
+            const peso = 70;
+            const altura = 175;
+            const idade = 30;
+            const habilidade = 'intermediario';
+            const tipo = 'shortboard';
+            const condicao = 'medio';
+            const frequencia = 'semanal';
+            
+            // Algoritmo simplificado
+            let fator = 0.35;
+            const alturaFator = (altura - 160) / 100;
+            fator += alturaFator * 0.05;
+            
+            if (habilidade === 'iniciante') fator += 0.10;
+            else if (habilidade === 'intermediario') fator += 0.05;
+            else if (habilidade === 'avancado') fator -= 0.05;
+            
+            const volume = Math.round(peso * fator * 10) / 10;
+            
+            resultDiv.innerHTML = `
+                <div class="success">
+                    <h3>✅ Calculadora funcionando!</h3>
+                    <p><strong>Volume calculado:</strong> ${volume}L</p>
+                    <p><strong>Parâmetros de teste:</strong></p>
+                    <ul>
+                        <li>Peso: ${peso}kg</li>
+                        <li>Altura: ${altura}cm</li>
+                        <li>Idade: ${idade} anos</li>
+                        <li>Habilidade: ${habilidade}</li>
+                        <li>Tipo: ${tipo}</li>
+                    </ul>
+                </div>
+            `;
+        }
+    </script>
+</body>
+</html> 

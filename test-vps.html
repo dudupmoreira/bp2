@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teste VPS - Calculadora de Volume</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; background: #f5f5f5; }
+        .container { max-width: 1200px; margin: 0 auto; }
+        .test-section { margin: 20px 0; padding: 20px; border-radius: 8px; background: white; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+        .success { border-left: 4px solid #28a745; }
+        .error { border-left: 4px solid #dc3545; }
+        .info { border-left: 4px solid #17a2b8; }
+        .warning { border-left: 4px solid #ffc107; }
+        button { padding: 12px 24px; margin: 5px; cursor: pointer; border: none; border-radius: 4px; font-size: 14px; }
+        .btn-primary { background: #007bff; color: white; }
+        .btn-success { background: #28a745; color: white; }
+        .btn-warning { background: #ffc107; color: #212529; }
+        .btn-danger { background: #dc3545; color: white; }
+        pre { background: #f8f9fa; padding: 15px; border-radius: 4px; overflow-x: auto; font-size: 12px; }
+        .status { padding: 8px 12px; border-radius: 4px; margin: 10px 0; font-weight: bold; }
+        .status.success { background: #d4edda; color: #155724; }
+        .status.error { background: #f8d7da; color: #721c24; }
+        .status.info { background: #d1ecf1; color: #0c5460; }
+        .stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin: 15px 0; }
+        .stat-card { background: #f8f9fa; padding: 15px; border-radius: 4px; text-align: center; }
+        .stat-number { font-size: 24px; font-weight: bold; color: #007bff; }
+        .stat-label { font-size: 12px; color: #6c757d; margin-top: 5px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🚀 Teste VPS - Calculadora de Volume</h1>
+        <p><strong>URL do VPS:</strong> https://bp2.ocoworks.com/nuvemshop-proxy-vps.php</p>
+        
+        <div class="test-section info">
+            <h3>📋 Melhorias do VPS</h3>
+            <ul>
+                <li><strong>Configurações Robustas:</strong> Timeout de 60s, SSL verificado, headers otimizados</li>
+                <li><strong>Log Detalhado:</strong> debug_vps.log com informações completas</li>
+                <li><strong>Cache Inteligente:</strong> 1 hora com filtros aplicados</li>
+                <li><strong>Estatísticas:</strong> Contagem de produtos com volume, tamanho e categorias</li>
+                <li><strong>Tratamento de Erros:</strong> Validação completa de respostas</li>
+                <li><strong>Sem Limitações:</strong> Sem restrições de shared hosting</li>
+            </ul>
+        </div>
+        
+        <div class="test-section">
+            <h3>🔍 Teste 1: Conectividade Básica</h3>
+            <p>Testa se o VPS está respondendo corretamente</p>
+            <button onclick="testConnectivity()" class="btn-primary">Testar Conectividade</button>
+            <div id="result1"></div>
+        </div>
+        
+        <div class="test-section">
+            <h3>🔍 Teste 2: Busca com Volume 35L (Tolerância 30%)</h3>
+            <p>Volume: 35L ± 10.5L (24.5L - 45.5L)</p>
+            <button onclick="testVolume35()" class="btn-success">Testar Busca</button>
+            <div id="result2"></div>
+        </div>
+        
+        <div class="test-section">
+            <h3>🔍 Teste 3: Busca Ampliada (Tolerância 50%)</h3>
+            <p>Volume: 40L ± 20L (20L - 60L)</p>
+            <button onclick="testVolume40()" class="btn-warning">Testar Busca Ampliada</button>
+            <div id="result3"></div>
+        </div>
+        
+        <div class="test-section">
+            <h3>🔍 Teste 4: Todas as Pranchas Disponíveis</h3>
+            <p>Busca todas as pranchas sem filtro de volume</p>
+            <button onclick="testAllProducts()" class="btn-primary">Testar Todas as Pranchas</button>
+            <div id="result4"></div>
+        </div>
+        
+        <div class="test-section">
+            <h3>🔍 Teste 5: Análise Detalhada</h3>
+            <p>Estatísticas completas dos produtos</p>
+            <button onclick="testDetailedAnalysis()" class="btn-success">Análise Detalhada</button>
+            <div id="result5"></div>
+        </div>
+        
+        <div class="test-section">
+            <h3>🔍 Teste 6: Performance e Cache</h3>
+            <p>Testa velocidade e uso de cache</p>
+            <button onclick="testPerformance()" class="btn-warning">Testar Performance</button>
+            <div id="result6"></div>
+        </div>
+    </div>
+
+    <script>
+        const VPS_URL = 'https://bp2.ocoworks.com/nuvemshop-proxy-vps.php';
+        
+        async function testConnectivity() {
+            const resultDiv = document.getElementById('result1');
+            resultDiv.innerHTML = '<div class="status info">🔄 Testando conectividade...</div>';
+            
+            try {
+                const startTime = Date.now();
+                const response = await fetch(VPS_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        volume_min: 0,
+                        volume_max: 999,
+                        categoria: 'todas'
+                    })
+                });
+                const endTime = Date.now();
+                const responseTime = endTime - startTime;
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                }
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    const products = data.products || [];
+                    resultDiv.innerHTML = `
+                        <div class="status success">✅ Conectividade OK</div>
+                        <div class="stats">
+                            <div class="stat-card">
+                                <div class="stat-number">${responseTime}ms</div>
+                                <div class="stat-label">Tempo de Resposta</div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-number">${products.length}</div>
+                                <div class="stat-label">Produtos Encontrados</div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-number">${data.from_cache ? 'Cache' : 'API'}</div>
+                                <div class="stat-label">Fonte dos Dados</div>
+                            </div>
+                        </div>
+                        <pre>${JSON.stringify(data, null, 2)}</pre>
+                    `;
+                } else {
+                    resultDiv.innerHTML = `<div class="status error">❌ Erro: ${data.error || 'Erro desconhecido'}</div>`;
+                }
+            } catch (error) {
+                resultDiv.innerHTML = `<div class="status error">❌ Erro de Conexão: ${error.message}</div>`;
+            }
+        }
+        
+        async function testVolume35() {
+            const resultDiv = document.getElementById('result2');
+            resultDiv.innerHTML = '<div class="status info">🔄 Testando busca específica...</div>';
+            
+            try {
+                const response = await fetch(VPS_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        volume_min: 24.5,
+                        volume_max: 45.5,
+                        categoria: 'todas'
+                    })
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    const products = data.products || [];
+                    const withVolume = products.filter(p => p.volume);
+                    const withoutVolume = products.filter(p => !p.volume);
+                    
+                    resultDiv.innerHTML = `
+                        <div class="status success">✅ Encontrados ${products.length} produtos</div>
+                        <div class="stats">
+                            <div class="stat-card">
+                                <div class="stat-number">${withVolume.length}</div>
+                                <div class="stat-label">Com Volume</div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-number">${withoutVolume.length}</div>
+                                <div class="stat-label">Sem Volume</div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-number">${data.from_cache ? 'Cache' : 'API'}</div>
+                                <div class="stat-label">Fonte</div>
+                            </div>
+                        </div>
+                        <pre>${JSON.stringify(products.slice(0, 3), null, 2)}</pre>
+                        ${products.length > 3 ? `<p>... e mais ${products.length - 3} produtos</p>` : ''}
+                    `;
+                } else {
+                    resultDiv.innerHTML = `<div class="status error">❌ Erro: ${data.error || 'Erro desconhecido'}</div>`;
+                }
+            } catch (error) {
+                resultDiv.innerHTML = `<div class="status error">❌ Erro de Conexão: ${error.message}</div>`;
+            }
+        }
+        
+        async function testVolume40() {
+            const resultDiv = document.getElementById('result3');
+            resultDiv.innerHTML = '<div class="status info">🔄 Testando busca ampliada...</div>';
+            
+            try {
+                const response = await fetch(VPS_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        volume_min: 20,
+                        volume_max: 60,
+                        categoria: 'todas'
+                    })
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    const products = data.products || [];
+                    const categories = {};
+                    products.forEach(p => {
+                        categories[p.categoria] = (categories[p.categoria] || 0) + 1;
+                    });
+                    
+                    resultDiv.innerHTML = `
+                        <div class="status success">✅ Encontrados ${products.length} produtos (busca ampliada)</div>
+                        <div class="stats">
+                            <div class="stat-card">
+                                <div class="stat-number">${products.length}</div>
+                                <div class="stat-label">Total</div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-number">${Object.keys(categories).length}</div>
+                                <div class="stat-label">Categorias</div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-number">${data.from_cache ? 'Cache' : 'API'}</div>
+                                <div class="stat-label">Fonte</div>
+                            </div>
+                        </div>
+                        <h4>Distribuição por Categoria:</h4>
+                        <pre>${JSON.stringify(categories, null, 2)}</pre>
+                        <pre>${JSON.stringify(products.slice(0, 2), null, 2)}</pre>
+                    `;
+                } else {
+                    resultDiv.innerHTML = `<div class="status error">❌ Erro: ${data.error || 'Erro desconhecido'}</div>`;
+                }
+            } catch (error) {
+                resultDiv.innerHTML = `<div class="status error">❌ Erro de Conexão: ${error.message}</div>`;
+            }
+        }
+        
+        async function testAllProducts() {
+            const resultDiv = document.getElementById('result4');
+            resultDiv.innerHTML = '<div class="status info">🔄 Buscando todas as pranchas...</div>';
+            
+            try {
+                const response = await fetch(VPS_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        volume_min: 0,
+                        volume_max: 999,
+                        categoria: 'todas'
+                    })
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    const products = data.products || [];
+                    const withVolume = products.filter(p => p.volume);
+                    const withSize = products.filter(p => p.size);
+                    const categories = {};
+                    
+                    products.forEach(product => {
+                        const cat = product.categoria || 'sem categoria';
+                        categories[cat] = (categories[cat] || 0) + 1;
+                    });
+                    
+                    resultDiv.innerHTML = `
+                        <div class="status success">✅ Total de ${products.length} produtos disponíveis</div>
+                        <div class="stats">
+                            <div class="stat-card">
+                                <div class="stat-number">${withVolume.length}</div>
+                                <div class="stat-label">Com Volume</div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-number">${withSize.length}</div>
+                                <div class="stat-label">Com Tamanho</div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-number">${Object.keys(categories).length}</div>
+                                <div class="stat-label">Categorias</div>
+                            </div>
+                        </div>
+                        <h4>Distribuição por Categoria:</h4>
+                        <pre>${JSON.stringify(categories, null, 2)}</pre>
+                        <pre>${JSON.stringify(products.slice(0, 2), null, 2)}</pre>
+                    `;
+                } else {
+                    resultDiv.innerHTML = `<div class="status error">❌ Erro: ${data.error || 'Erro desconhecido'}</div>`;
+                }
+            } catch (error) {
+                resultDiv.innerHTML = `<div class="status error">❌ Erro de Conexão: ${error.message}</div>`;
+            }
+        }
+        
+        async function testDetailedAnalysis() {
+            const resultDiv = document.getElementById('result5');
+            resultDiv.innerHTML = '<div class="status info">🔄 Analisando detalhadamente...</div>';
+            
+            try {
+                const response = await fetch(VPS_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        volume_min: 0,
+                        volume_max: 999,
+                        categoria: 'todas'
+                    })
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    const products = data.products || [];
+                    
+                    // Análise detalhada
+                    const analysis = {
+                        total: products.length,
+                        withVolume: products.filter(p => p.volume).length,
+                        withSize: products.filter(p => p.size).length,
+                        withVariant: products.filter(p => p.variant).length,
+                        withImages: products.filter(p => p.images && p.images.length > 0).length,
+                        withPrice: products.filter(p => p.price).length,
+                        categories: {},
+                        volumeRange: { min: null, max: null, avg: 0 },
+                        sizes: []
+                    };
+                    
+                    let totalVolume = 0;
+                    let volumeCount = 0;
+                    
+                    products.forEach(product => {
+                        // Categorias
+                        const cat = product.categoria || 'sem categoria';
+                        analysis.categories[cat] = (analysis.categories[cat] || 0) + 1;
+                        
+                        // Volume
+                        if (product.volume) {
+                            if (analysis.volumeRange.min === null || product.volume < analysis.volumeRange.min) {
+                                analysis.volumeRange.min = product.volume;
+                            }
+                            if (analysis.volumeRange.max === null || product.volume > analysis.volumeRange.max) {
+                                analysis.volumeRange.max = product.volume;
+                            }
+                            totalVolume += product.volume;
+                            volumeCount++;
+                        }
+                        
+                        // Tamanhos únicos
+                        if (product.size && !analysis.sizes.includes(product.size)) {
+                            analysis.sizes.push(product.size);
+                        }
+                    });
+                    
+                    if (volumeCount > 0) {
+                        analysis.volumeRange.avg = (totalVolume / volumeCount).toFixed(1);
+                    }
+                    
+                    resultDiv.innerHTML = `
+                        <div class="status success">✅ Análise Detalhada Completa</div>
+                        <div class="stats">
+                            <div class="stat-card">
+                                <div class="stat-number">${analysis.total}</div>
+                                <div class="stat-label">Total Produtos</div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-number">${analysis.withVolume}</div>
+                                <div class="stat-label">Com Volume</div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-number">${analysis.withSize}</div>
+                                <div class="stat-label">Com Tamanho</div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-number">${analysis.withImages}</div>
+                                <div class="stat-label">Com Imagens</div>
+                            </div>
+                        </div>
+                        <h4>Análise de Volume:</h4>
+                        <p><strong>Mínimo:</strong> ${analysis.volumeRange.min || 'N/A'}L</p>
+                        <p><strong>Máximo:</strong> ${analysis.volumeRange.max || 'N/A'}L</p>
+                        <p><strong>Médio:</strong> ${analysis.volumeRange.avg}L</p>
+                        <h4>Distribuição por Categoria:</h4>
+                        <pre>${JSON.stringify(analysis.categories, null, 2)}</pre>
+                        <h4>Tamanhos Únicos (${analysis.sizes.length}):</h4>
+                        <pre>${JSON.stringify(analysis.sizes, null, 2)}</pre>
+                    `;
+                } else {
+                    resultDiv.innerHTML = `<div class="status error">❌ Erro: ${data.error || 'Erro desconhecido'}</div>`;
+                }
+            } catch (error) {
+                resultDiv.innerHTML = `<div class="status error">❌ Erro de Conexão: ${error.message}</div>`;
+            }
+        }
+        
+        async function testPerformance() {
+            const resultDiv = document.getElementById('result6');
+            resultDiv.innerHTML = '<div class="status info">🔄 Testando performance...</div>';
+            
+            try {
+                const times = [];
+                const results = [];
+                
+                // Teste 1: Primeira requisição (pode ser API)
+                const start1 = Date.now();
+                const response1 = await fetch(VPS_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ volume_min: 0, volume_max: 999, categoria: 'todas' })
+                });
+                const data1 = await response1.json();
+                const time1 = Date.now() - start1;
+                times.push(time1);
+                results.push({ time: time1, source: data1.from_cache ? 'Cache' : 'API', products: data1.products?.length || 0 });
+                
+                // Teste 2: Segunda requisição (deve ser cache)
+                const start2 = Date.now();
+                const response2 = await fetch(VPS_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ volume_min: 0, volume_max: 999, categoria: 'todas' })
+                });
+                const data2 = await response2.json();
+                const time2 = Date.now() - start2;
+                times.push(time2);
+                results.push({ time: time2, source: data2.from_cache ? 'Cache' : 'API', products: data2.products?.length || 0 });
+                
+                // Teste 3: Requisição filtrada
+                const start3 = Date.now();
+                const response3 = await fetch(VPS_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ volume_min: 30, volume_max: 50, categoria: 'shortboard' })
+                });
+                const data3 = await response3.json();
+                const time3 = Date.now() - start3;
+                times.push(time3);
+                results.push({ time: time3, source: data3.from_cache ? 'Cache' : 'API', products: data3.products?.length || 0 });
+                
+                const avgTime = (times.reduce((a, b) => a + b, 0) / times.length).toFixed(0);
+                const minTime = Math.min(...times);
+                const maxTime = Math.max(...times);
+                
+                resultDiv.innerHTML = `
+                    <div class="status success">✅ Teste de Performance Completo</div>
+                    <div class="stats">
+                        <div class="stat-card">
+                            <div class="stat-number">${avgTime}ms</div>
+                            <div class="stat-label">Tempo Médio</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-number">${minTime}ms</div>
+                            <div class="stat-label">Tempo Mínimo</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-number">${maxTime}ms</div>
+                            <div class="stat-label">Tempo Máximo</div>
+                        </div>
+                    </div>
+                    <h4>Resultados dos Testes:</h4>
+                    <pre>${JSON.stringify(results, null, 2)}</pre>
+                    <div class="status ${avgTime < 1000 ? 'success' : 'warning'}">
+                        ${avgTime < 1000 ? '✅ Performance Excelente' : '⚠️ Performance Pode Ser Melhorada'}
+                    </div>
+                `;
+            } catch (error) {
+                resultDiv.innerHTML = `<div class="status error">❌ Erro de Performance: ${error.message}</div>`;
+            }
+        }
+    </script>
+</body>
+</html> 

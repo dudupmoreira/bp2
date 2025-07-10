@@ -1,32 +1,118 @@
-<<<<<<< HEAD
-# BP-Buscador
-=======
-# BP-Buscador - Board's Point Surfboard Volume Calculator
+# 🏄‍♂️ Calculadora de Volume de Prancha - Board's Point
 
-Este projeto contém:
-- `surfboard-volume-calculator.html`: Calculadora de volume de prancha com recomendações automáticas do catálogo da loja.
-- `nuvemshop-proxy.php`: Proxy seguro em PHP para buscar produtos da API da NuvemShop sem expor o token.
+Uma ferramenta inteligente para calcular o volume ideal de prancha de surf baseado no perfil do surfista e recomendar produtos da loja.
 
-## Como publicar na Hostinger (bp.ocoworks.com)
+## ✨ Funcionalidades
 
-1. **Faça upload dos arquivos**
-   - Envie `surfboard-volume-calculator.html` e `nuvemshop-proxy.php` para a raiz do seu domínio (pasta `public_html` ou equivalente) usando FTP ou o Gerenciador de Arquivos do painel da Hostinger.
+### 🧮 Calculadora Avançada
+- **Algoritmo inteligente** que considera múltiplos fatores
+- **Validação em tempo real** dos dados inseridos
+- **Opções avançadas** para surfistas experientes
+- **Interface moderna** e responsiva
 
-2. **Acesse a calculadora**
-   - No navegador, acesse: `https://bp.ocoworks.com/surfboard-volume-calculator.html`
+### 📊 Fatores Considerados
+- **Peso e altura** do surfista
+- **Idade** e condicionamento físico
+- **Frequência** de surf
+- **Nível de habilidade** (iniciante, intermediário, avançado)
+- **Tipo de prancha** desejada
+- **Condições da onda** (altura, velocidade)
+- **Paddle power** do surfista
 
-3. **Funcionamento**
-   - O HTML faz requisições para `nuvemshop-proxy.php`, que busca os produtos da loja Board's Point na NuvemShop e retorna as recomendações de pranchas conforme o volume calculado.
+### 🛍️ Integração com Loja
+- **Busca automática** de pranchas na NuvemShop
+- **Filtro por volume** calculado
+- **Categorização inteligente** de produtos
+- **Cache otimizado** para melhor performance
 
-4. **Segurança**
-   - O token da API da NuvemShop está protegido no backend PHP e não é exposto ao navegador.
+## 🚀 Como Usar
 
-## Observações
-- Se quiser incorporar a calculadora em outra página, use um iframe ou copie o conteúdo do HTML.
-- Para personalizar o layout, edite o CSS no arquivo HTML.
-- Para alterar o token ou store_id, edite o arquivo `nuvemshop-proxy.php`.
+1. **Acesse** a calculadora em `surfboard-volume-calculator.html`
+2. **Preencha** seus dados básicos (peso, altura, idade)
+3. **Configure** seu perfil de surf (habilidade, frequência, etc.)
+4. **Use as opções avançadas** para maior precisão
+5. **Clique em calcular** e veja suas recomendações
+
+## 🛠️ Tecnologias
+
+- **Frontend**: HTML5, CSS3, JavaScript ES6+
+- **Backend**: PHP 7.4+
+- **API**: NuvemShop REST API
+- **Cache**: Sistema de cache local
+
+## 📁 Estrutura do Projeto
+
+```
+BP Buscador/
+├── surfboard-volume-calculator.html  # Interface principal
+├── nuvemshop-proxy.php              # Proxy da API
+├── cache_products.json              # Cache de produtos (gerado automaticamente)
+└── README.md                        # Documentação
+```
+
+## 🔧 Configuração
+
+### Pré-requisitos
+- Servidor web com PHP 7.4+
+- Extensão cURL habilitada
+- Acesso à API da NuvemShop
+
+### Configuração da API
+Edite `nuvemshop-proxy.php` e atualize:
+```php
+$store_id = "SEU_STORE_ID";
+$token = "SEU_ACCESS_TOKEN";
+```
+
+## 📈 Melhorias Implementadas
+
+### v2.0 - Interface Moderna
+- ✅ Design responsivo com gradientes
+- ✅ Validação em tempo real
+- ✅ Feedback visual melhorado
+- ✅ Layout em grid para mobile
+
+### v2.0 - Algoritmo Aprimorado
+- ✅ Consideração de altura e idade
+- ✅ Fatores mais precisos
+- ✅ Limites de volume (20-100L)
+- ✅ Recomendações personalizadas
+
+### v2.0 - Backend Robusto
+- ✅ Sistema de cache
+- ✅ Tratamento de erros
+- ✅ Processamento inteligente de produtos
+- ✅ Extração automática de volume
+
+## 🎯 Próximas Funcionalidades
+
+- [ ] **Histórico de cálculos**
+- [ ] **Comparação de pranchas**
+- [ ] **Filtros avançados**
+- [ ] **Sistema de favoritos**
+- [ ] **Notificações de estoque**
+- [ ] **Integração com redes sociais**
+
+## 🤝 Contribuição
+
+Para contribuir com o projeto:
+
+1. Faça um fork do repositório
+2. Crie uma branch para sua feature
+3. Implemente as melhorias
+4. Teste thoroughly
+5. Envie um pull request
+
+## 📞 Suporte
+
+Para dúvidas ou suporte:
+- Email: contato@boardspoint.com
+- WhatsApp: (11) 99999-9999
+
+## 📄 Licença
+
+Este projeto está sob a licença MIT. Veja o arquivo LICENSE para mais detalhes.
 
 ---
 
-Dúvidas? Entre em contato com o desenvolvedor responsável pelo projeto.
->>>>>>> 9402095 (Initial commit for BP Buscador project)
+**Desenvolvido com ❤️ pela equipe Board's Point**

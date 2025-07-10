@@ -4,85 +4,304 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Calculadora de Volume de Prancha - Board's Point</title>
+  
+  <!-- Meta tags para SEO -->
+  <meta name="description" content="Encontre a prancha perfeita com nossa calculadora de volume. Board's Point - Especialistas em surf.">
+  <meta name="keywords" content="surf, prancha, volume, calculadora, board point">
+  <meta name="author" content="Board's Point">
+  
+  <!-- Open Graph -->
+  <meta property="og:title" content="Calculadora de Volume de Prancha - Board's Point">
+  <meta property="og:description" content="Encontre a prancha perfeita com nossa calculadora de volume. Board's Point - Especialistas em surf.">
+  <meta property="og:image" content="https://bp.ocoworks.com/og-image.jpg">
+  <meta property="og:url" content="https://bp.ocoworks.com/surfboard-volume-calculator.html">
+  <meta property="og:type" content="website">
+  
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Calculadora de Volume de Prancha - Board's Point">
+  <meta name="twitter:description" content="Encontre a prancha perfeita com nossa calculadora de volume. Board's Point - Especialistas em surf.">
+  <meta name="twitter:image" content="https://bp.ocoworks.com/og-image.jpg">
+  
+  <!-- Canonical URL -->
+  <link rel="canonical" href="https://bp.ocoworks.com/surfboard-volume-calculator.html">
+  
   <style>
-    body { font-family: Arial, sans-serif; margin: 40px; background: #f7f7f7; }
-    .container { background: #fff; padding: 24px; border-radius: 8px; max-width: 500px; margin: auto; box-shadow: 0 2px 8px #0001; }
-    h1 { text-align: center; }
-    label { display: block; margin-top: 16px; }
-    select, input { width: 100%; padding: 8px; margin-top: 4px; border-radius: 4px; border: 1px solid #ccc; }
-    button { margin-top: 24px; width: 100%; padding: 12px; background: #0077cc; color: #fff; border: none; border-radius: 4px; font-size: 1.1em; cursor: pointer; }
-    .result, .recommendations { margin-top: 32px; }
-    .board { background: #f0f0f0; padding: 12px; border-radius: 6px; margin-bottom: 12px; }
+    * { box-sizing: border-box; }
+    body { 
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+      margin: 0; 
+      padding: 20px;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+    }
+    .container { 
+      background: #fff; 
+      padding: 32px; 
+      border-radius: 16px; 
+      max-width: 600px; 
+      margin: auto; 
+      box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+    }
+    h1 { 
+      text-align: center; 
+      color: #2c3e50;
+      margin-bottom: 8px;
+      font-size: 2.2em;
+    }
+    .subtitle {
+      text-align: center;
+      color: #7f8c8d;
+      margin-bottom: 32px;
+      font-size: 1.1em;
+    }
+    .form-group { 
+      margin-bottom: 20px; 
+    }
+    label { 
+      display: block; 
+      margin-bottom: 8px;
+      font-weight: 600;
+      color: #2c3e50;
+    }
+    select, input { 
+      width: 100%; 
+      padding: 12px 16px; 
+      border-radius: 8px; 
+      border: 2px solid #e1e8ed;
+      font-size: 16px;
+      transition: all 0.3s ease;
+    }
+    select:focus, input:focus {
+      outline: none;
+      border-color: #667eea;
+      box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+    }
+    .btn {
+      padding: 14px 24px;
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      width: 100%;
+      margin-top: 8px;
+    }
+    .btn-primary {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+    }
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
+    }
+    .btn-secondary {
+      background: #f8f9fa;
+      color: #495057;
+      border: 2px solid #e9ecef;
+    }
+    .btn-secondary:hover {
+      background: #e9ecef;
+    }
+    .result { 
+      margin-top: 32px;
+      padding: 24px;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      border-radius: 12px;
+      text-align: center;
+    }
+    .volume-display {
+      font-size: 2.5em;
+      font-weight: bold;
+      margin: 16px 0;
+    }
+    .recommendations { 
+      margin-top: 24px; 
+    }
+    .board { 
+      background: #f8f9fa; 
+      padding: 20px; 
+      border-radius: 12px; 
+      margin-bottom: 16px;
+      border: 1px solid #e9ecef;
+      transition: all 0.3s ease;
+    }
+    .board:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+    }
+    .board img {
+      max-width: 150px;
+      border-radius: 8px;
+      margin: 12px 0;
+    }
+    .loading {
+      text-align: center;
+      padding: 40px;
+      color: #7f8c8d;
+    }
+    .error {
+      background: #fee;
+      color: #c33;
+      padding: 16px;
+      border-radius: 8px;
+      border: 1px solid #fcc;
+    }
+    .success {
+      background: #efe;
+      color: #363;
+      padding: 16px;
+      border-radius: 8px;
+      border: 1px solid #cfc;
+    }
+    .advanced-toggle {
+      margin: 24px 0;
+      text-align: center;
+    }
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+    .footer {
+      margin-top: 40px;
+      text-align: center;
+      color: #7f8c8d;
+      font-size: 0.9em;
+    }
+    .footer a {
+      color: #667eea;
+      text-decoration: none;
+    }
+    .footer a:hover {
+      text-decoration: underline;
+    }
+    @media (max-width: 768px) {
+      .form-row {
+        grid-template-columns: 1fr;
+      }
+      .container {
+        margin: 10px;
+        padding: 20px;
+      }
+    }
   </style>
 </head>
 <body>
   <div class="container">
-    <h1>Calculadora de Volume de Prancha</h1>
+    <h1>🏄‍♂️ Calculadora de Volume</h1>
+    <p class="subtitle">Encontre a prancha perfeita para você</p>
+    
     <form id="volumeForm">
-      <label>Peso (kg): <input type="number" id="peso" min="30" max="150" required></label>
-      <label>Altura (cm): <input type="number" id="altura" min="120" max="220" required></label>
-      <label>Idade: <input type="number" id="idade" min="10" max="80" required></label>
-      <label>Condicionamento físico:
+      <div class="form-row">
+        <div class="form-group">
+          <label>Peso (kg)</label>
+          <input type="number" id="peso" min="30" max="150" required placeholder="Ex: 70">
+        </div>
+        <div class="form-group">
+          <label>Altura (cm)</label>
+          <input type="number" id="altura" min="120" max="220" required placeholder="Ex: 175">
+        </div>
+      </div>
+      
+      <div class="form-group">
+        <label>Idade</label>
+        <input type="number" id="idade" min="10" max="80" required placeholder="Ex: 25">
+      </div>
+      
+      <div class="form-group">
+        <label>Condicionamento físico</label>
         <select id="condicao">
           <option value="baixo">Poderia ser melhor</option>
-          <option value="medio">Razoável</option>
+          <option value="medio" selected>Razoável</option>
           <option value="alto">Muito bom</option>
         </select>
-      </label>
-      <label>Frequência de surf:
+      </div>
+      
+      <div class="form-group">
+        <label>Frequência de surf</label>
         <select id="frequencia">
           <option value="nunca">Nunca</option>
           <option value="mensal">Mensal</option>
-          <option value="semanal">Semanal</option>
+          <option value="semanal" selected>Semanal</option>
           <option value="diario">Diário</option>
         </select>
-      </label>
-      <label>Nível de habilidade:
+      </div>
+      
+      <div class="form-group">
+        <label>Nível de habilidade</label>
         <select id="habilidade">
-          <option value="iniciante">Iniciante</option>
+          <option value="iniciante" selected>Iniciante</option>
           <option value="intermediario">Intermediário</option>
           <option value="avancado">Avançado</option>
         </select>
-      </label>
-      <label>Tipo de prancha:
+      </div>
+      
+      <div class="form-group">
+        <label>Guild Factor (GF) <span style="font-weight:400; color:#888;">(ajuste conforme seu perfil)</span></label>
+        <div style="display:flex; align-items:center; gap:12px;">
+          <input type="range" id="gf" min="0.30" max="0.55" step="0.01" value="0.52" style="flex:1;">
+          <span id="gf-value" style="width:48px; text-align:right; font-weight:bold; color:#667eea;">0.52</span>
+        </div>
+        <small style="color:#888;">GF recomendado: 0.30-0.36 (avançado), 0.38-0.42 (intermediário), 0.50-0.55 (iniciante)</small>
+      </div>
+
+      <div class="form-group">
+        <label>Tipo de prancha</label>
         <select id="tipo">
-          <option value="shortboard">Shortboard</option>
+          <option value="shortboard" selected>Shortboard</option>
           <option value="funboard">Funboard</option>
           <option value="longboard">Longboard</option>
         </select>
-      </label>
-      <button type="button" id="showAdvancedBtn" style="margin-top:16px; background:#eee; color:#333; border:1px solid #bbb;">Mostrar opções avançadas</button>
-      <div id="advancedOptions" style="display:none; margin-top:16px;">
-        <label>Altura da onda:
+      </div>
+      
+      <div class="advanced-toggle">
+        <button type="button" id="showAdvancedBtn" class="btn btn-secondary">
+          🔧 Mostrar opções avançadas
+        </button>
+      </div>
+      
+      <div id="advancedOptions" style="display:none;">
+        <div class="form-row">
+          <div class="form-group">
+            <label>Altura da onda</label>
           <select id="onda">
             <option value="0">0-2ft (0-0,6m)</option>
-            <option value="2">2-4ft (0,6-1,2m)</option>
+              <option value="2" selected>2-4ft (0,6-1,2m)</option>
             <option value="4">4-6ft (1,2-1,8m)</option>
             <option value="6">6-8ft (1,8-2,4m)</option>
             <option value="8">8ft+ (2,4m+)</option>
           </select>
-        </label>
-        <label>Paddle power:
+          </div>
+          <div class="form-group">
+            <label>Paddle power</label>
           <select id="paddle">
             <option value="1">1 (baixo)</option>
             <option value="2">2</option>
-            <option value="3">3 (médio)</option>
+              <option value="3" selected>3 (médio)</option>
             <option value="4">4</option>
             <option value="5">5 (alto)</option>
           </select>
-        </label>
-        <label>Velocidade:
+          </div>
+        </div>
+        
+        <div class="form-group">
+          <label>Velocidade</label>
           <select id="velocidade">
             <option value="1">1 (baixa)</option>
             <option value="2">2</option>
-            <option value="3">3 (média)</option>
+            <option value="3" selected>3 (média)</option>
             <option value="4">4</option>
             <option value="5">5 (alta)</option>
           </select>
-        </label>
-        <label>Categoria da prancha:
+        </div>
+        
+        <div class="form-group">
+          <label>Categoria da prancha</label>
           <select id="categoria">
-            <option value="shortboard">Shortboard</option>
+            <option value="shortboard" selected>Shortboard</option>
             <option value="funboard">Funboard</option>
             <option value="longboard">Longboard</option>
             <option value="fish">Fish</option>
@@ -91,110 +310,433 @@
             <option value="bigwave">Big Wave</option>
             <option value="grom">Grom</option>
           </select>
-        </label>
+        </div>
       </div>
-      <button type="submit">Calcular volume e recomendar pranchas</button>
+      
+      <button type="submit" class="btn btn-primary">
+        🏄‍♂️ Calcular volume e buscar pranchas
+      </button>
     </form>
-    <div class="result" id="resultado"></div>
+    
+    <div class="result" id="resultado" style="display:none;"></div>
     <div class="recommendations" id="recomendacoes"></div>
+    
+    <div class="footer">
+      <p>© 2024 <a href="https://bp.ocoworks.com">Board's Point</a> - Especialistas em surf</p>
+      <p>📞 <a href="tel:+5511999999999">(11) 99999-9999</a> | 📧 <a href="mailto:contato@boardspoint.com">contato@boardspoint.com</a></p>
+    </div>
   </div>
+
   <script>
+    // Configurações do site
+    const SITE_CONFIG = {
+      domain: 'bp.ocoworks.com',
+      apiUrl: 'https://bp.ocoworks.com/nuvemshop-proxy.php',
+      contact: {
+        phone: '(11) 99999-9999',
+        email: 'contato@boardspoint.com',
+        whatsapp: '5511999999999'
+      }
+    };
+
+    // Toggle opções avançadas
     document.getElementById('showAdvancedBtn').onclick = function(e) {
       e.preventDefault();
       var adv = document.getElementById('advancedOptions');
-      adv.style.display = adv.style.display === 'none' ? 'block' : 'none';
-      this.innerText = adv.style.display === 'block' ? 'Ocultar opções avançadas' : 'Mostrar opções avançadas';
+      var isVisible = adv.style.display !== 'none';
+      adv.style.display = isVisible ? 'none' : 'block';
+      this.innerHTML = isVisible ? '🔧 Mostrar opções avançadas' : '🔧 Ocultar opções avançadas';
     };
 
-    function calcularVolume(peso, habilidade, tipo, condicao, frequencia, onda, paddle, velocidade) {
-      let fator = 0.4;
-      if (tipo === 'longboard') {
-        fator += 0.15;
-      } else if (tipo === 'funboard') {
-        fator += 0.07;
-      }
-      if (habilidade === 'iniciante') {
-        fator += 0.08;
-      } else if (habilidade === 'intermediario') {
-        fator += 0.03;
-      } else if (habilidade === 'avancado') {
-        fator -= 0.03;
-      }
-      if (condicao === 'baixo') {
-        fator += 0.04;
-      } else if (condicao === 'alto') {
-        fator -= 0.02;
-      }
-      if (frequencia === 'nunca' || frequencia === 'mensal') {
-        fator += 0.03;
-      } else if (frequencia === 'diario') {
-        fator -= 0.02;
-      }
-      // Opções avançadas
-      if (onda) {
-        if (parseInt(onda) <= 2) fator += 0.03;
-        else if (parseInt(onda) >= 6) fator -= 0.02;
-      }
-      if (paddle) {
-        if (parseInt(paddle) <= 2) fator += 0.02;
-        else if (parseInt(paddle) >= 4) fator -= 0.01;
-      }
-      if (velocidade) {
-        if (parseInt(velocidade) <= 2) fator += 0.01;
-        else if (parseInt(velocidade) >= 4) fator -= 0.01;
-      }
-      return Math.round(peso * fator * 10) / 10;
-    }
-
-    document.getElementById('volumeForm').onsubmit = async function(e) {
-      e.preventDefault();
+    // Validação em tempo real
+    function validateForm() {
       const peso = parseFloat(document.getElementById('peso').value);
       const altura = parseInt(document.getElementById('altura').value);
       const idade = parseInt(document.getElementById('idade').value);
-      const condicao = document.getElementById('condicao').value;
-      const frequencia = document.getElementById('frequencia').value;
-      const habilidade = document.getElementById('habilidade').value;
-      const tipo = document.getElementById('tipo').value;
-      // Opções avançadas
-      const onda = document.getElementById('onda') ? document.getElementById('onda').value : null;
-      const paddle = document.getElementById('paddle') ? document.getElementById('paddle').value : null;
-      const velocidade = document.getElementById('velocidade') ? document.getElementById('velocidade').value : null;
-      const categoria = document.getElementById('categoria') ? document.getElementById('categoria').value : null;
-      const volume = calcularVolume(peso, habilidade, tipo, condicao, frequencia, onda, paddle, velocidade);
-      document.getElementById('resultado').innerHTML = `<b>Volume ideal:</b> ${volume} litros`;
-      document.getElementById('recomendacoes').innerHTML = '<em>Buscando pranchas recomendadas...</em>';
-      // Chamada à API da NuvemShop (exemplo fictício, precisa de token e endpoint real)
-      try {
-        // Exemplo: buscar produtos com "volume" próximo ao calculado
-        // Substitua 'YOUR_ACCESS_TOKEN' e 'YOUR_STORE_ID' pelos valores reais
-        const response = await fetch('nuvemshop-proxy.php');
-        const produtos = await response.json();
-        // Filtrar produtos por volume (assumindo que "volume" está na descrição ou nome)
-        const recomendadas = produtos.filter(prod => {
-          const texto = (prod.name || '') + ' ' + (prod.description || '');
-          const match = texto.match(/(\d{1,3}(?:[\.,]\d{1,2})?) ?l/i);
-          if (match) {
-            const vol = parseFloat(match[1].replace(',', '.'));
-            const categoriaMatch = categoria ? (texto.toLowerCase().includes(categoria)) : true;
-            return Math.abs(vol - volume) <= 3 && categoriaMatch; // tolerância de 3 litros e categoria
-          }
-          return false;
-        });
-        if (recomendadas.length === 0) {
-          document.getElementById('recomendacoes').innerHTML = '<b>Nenhuma prancha encontrada com volume próximo.</b>';
-        } else {
-          document.getElementById('recomendacoes').innerHTML = '<b>Pranchas recomendadas:</b><br>' + recomendadas.map(prod => `
-            <div class="board">
-              <b>${prod.name}</b><br>
-              ${prod.images && prod.images[0] ? `<img src="${prod.images[0].src}" alt="${prod.name}" style="max-width:120px;">` : ''}<br>
-              ${prod.description ? prod.description.substring(0, 120) + '...' : ''}
-            </div>
-          `).join('');
-        }
-      } catch (err) {
-        document.getElementById('recomendacoes').innerHTML = '<b>Erro ao buscar pranchas na loja.</b>';
+      
+      let isValid = true;
+      let message = '';
+      
+      if (peso < 30 || peso > 150) {
+        message += 'Peso deve estar entre 30 e 150 kg.\n';
+        isValid = false;
       }
+      
+      if (altura < 120 || altura > 220) {
+        message += 'Altura deve estar entre 120 e 220 cm.\n';
+        isValid = false;
+      }
+      
+      if (idade < 10 || idade > 80) {
+        message += 'Idade deve estar entre 10 e 80 anos.\n';
+        isValid = false;
+      }
+      
+      return { isValid, message };
+    }
+
+    // Função para sugerir GF padrão por habilidade
+    function getGuildFactor(habilidade) {
+      switch (habilidade) {
+        case 'pro':
+          return 0.33;
+        case 'avancado':
+          return 0.36;
+        case 'intermediario':
+          return 0.40;
+        case 'iniciante':
+          return 0.52;
+        default:
+          return 0.38;
+      }
+    }
+
+    // Algoritmo de cálculo de volume usando GF ajustável
+    function calcularVolume(peso, habilidade, idade, condicao, onda, gfManual) {
+      // Usar GF manual se fornecido, senão sugerido
+      let gf = gfManual !== undefined && gfManual !== null ? gfManual : getGuildFactor(habilidade);
+      let volume = peso * gf;
+      // Ajustes finos
+      if (idade > 45) volume += 2;
+      if (condicao === 'baixo') volume += 2;
+      if (onda === 'pequena') volume += 3;
+      if (onda === 'grande') volume -= 3;
+      return Math.round(volume * 10) / 10;
+    }
+
+    // Atualizar GF sugerido ao mudar habilidade
+    document.getElementById('habilidade').addEventListener('change', function() {
+      const habilidade = this.value;
+      const gfSugerido = getGuildFactor(habilidade);
+      const gfSlider = document.getElementById('gf');
+      gfSlider.value = gfSugerido;
+      document.getElementById('gf-value').innerText = gfSugerido;
+    });
+
+    // Atualizar valor do slider em tempo real
+    document.getElementById('gf').addEventListener('input', function() {
+      document.getElementById('gf-value').innerText = this.value;
+    });
+
+    // Função para obter recomendação baseada no volume
+    function getRecomendacao(volume, habilidade) {
+      if (volume < 30) {
+        return "Considere uma prancha maior para mais estabilidade.";
+      } else if (volume > 80) {
+        return "Você pode usar uma prancha menor para mais manobrabilidade.";
+      } else {
+        return "Volume ideal para seu perfil!";
+      }
+    }
+
+    // Função para mostrar mensagens
+    function mostrarMensagem(mensagem, tipo = 'info') {
+      const resultadosDiv = document.getElementById('resultados');
+      const alertClass = tipo === 'error' ? 'alert-danger' : tipo === 'warning' ? 'alert-warning' : 'alert-info';
+      
+      resultadosDiv.innerHTML = `
+        <div class="alert ${alertClass}">
+          <h4>${tipo === 'error' ? '❌ Erro' : tipo === 'warning' ? '⚠️ Aviso' : 'ℹ️ Informação'}</h4>
+          <p>${mensagem}</p>
+        </div>
+      `;
+      
+      document.getElementById('resultados').scrollIntoView({ behavior: 'smooth' });
+    }
+
+    // Função para mostrar loading
+    function showLoading(show) {
+      const resultadosDiv = document.getElementById('resultados');
+      if (show) {
+        resultadosDiv.innerHTML = `
+          <div class="text-center py-5">
+            <div class="spinner-border text-primary" role="status">
+              <span class="visually-hidden">Carregando...</span>
+            </div>
+            <p class="mt-3">🔍 Buscando pranchas recomendadas...</p>
+          </div>
+        `;
+      }
+    }
+
+    // Função para mostrar resultados
+    function mostrarResultados(pranchas, volumeCalculado, buscaAmpliada = false) {
+      const resultadosDiv = document.getElementById('resultados');
+      
+      if (!pranchas || pranchas.length === 0) {
+        resultadosDiv.innerHTML = `
+          <div class="alert alert-warning">
+            <h4>Nenhuma prancha encontrada</h4>
+            <p>Não encontramos pranchas com o volume calculado (${volumeCalculado}L).</p>
+            <p>Tente:</p>
+            <ul>
+              <li>Ajustar os parâmetros de cálculo</li>
+              <li>Verificar se há produtos cadastrados na loja</li>
+              <li>Testar com diferentes categorias de prancha</li>
+            </ul>
+          </div>
+        `;
+        return;
+      }
+      
+      let html = `
+        <div class="resultados-header">
+          <h3>Pranchas Recomendadas</h3>
+          <div class="volume-info">
+            <span class="badge bg-primary">Volume Calculado: ${volumeCalculado}L</span>
+            <small class="text-muted">Baseado no Guild Factor de John Whitney Guild</small>
+            ${buscaAmpliada ? '<br><small class="text-warning">⚠️ Busca ampliada para encontrar mais opções</small>' : ''}
+          </div>
+        </div>
+        
+        <div class="guild-factor-info">
+          <div class="alert alert-info">
+            <h5>📊 Sobre o Guild Factor</h5>
+            <p>O volume foi calculado usando o <strong>Guild Factor</strong>, uma fórmula desenvolvida por John Whitney Guild que considera:</p>
+            <ul>
+              <li><strong>Peso do surfista</strong> (convertido para libras)</li>
+              <li><strong>Fator de habilidade</strong>: Iniciante (0.45), Intermediário (0.42), Avançado (0.38)</li>
+              <li><strong>Ajustes adicionais</strong> por altura, idade, condicionamento e outros fatores</li>
+            </ul>
+            <p><strong>Fórmula base:</strong> Volume = Peso (lbs) × Fator de Habilidade + Ajustes</p>
+          </div>
+        </div>
+        
+        <div class="row">
+      `;
+      
+      pranchas.forEach((prancha, index) => {
+        const diferenca = Math.abs(prancha.volume - volumeCalculado);
+        const diferencaPercentual = ((diferenca / volumeCalculado) * 100).toFixed(1);
+        
+        let badgeClass = 'bg-success';
+        if (diferencaPercentual > 15) badgeClass = 'bg-warning';
+        if (diferencaPercentual > 25) badgeClass = 'bg-danger';
+        
+        html += `
+          <div class="col-md-6 col-lg-4 mb-4">
+            <div class="card h-100 shadow-sm">
+              ${prancha.images && prancha.images.length > 0 ? `
+                <img src="${prancha.images[0].src}" class="card-img-top" alt="${prancha.name}" style="height: 200px; object-fit: cover;">
+              ` : `
+                <div class="card-img-top bg-light d-flex align-items-center justify-content-center" style="height: 200px;">
+                  <i class="fas fa-image text-muted" style="font-size: 3rem;"></i>
+                </div>
+              `}
+              <div class="card-body">
+                <h5 class="card-title">${prancha.name}</h5>
+                ${prancha.variant ? `<div class="variant-info mb-1"><span class="badge bg-secondary">${prancha.variant}</span></div>` : ''}
+                ${prancha.size ? `<div class="size-info mb-1"><span class="badge bg-info">Tamanho: ${prancha.size}</span></div>` : ''}
+                <div class="volume-badge mb-2">
+                  <span class="badge ${badgeClass}">
+                    ${prancha.volume}L 
+                    <small>(${diferencaPercentual}% ${prancha.volume > volumeCalculado ? 'maior' : 'menor'})</small>
+                  </span>
+                </div>
+                <div class="product-info">
+                  <p class="card-text">
+                    <strong>Categoria:</strong> ${prancha.categoria}<br>
+                    ${prancha.price ? `<strong>Preço:</strong> R$ ${parseFloat(prancha.price).toFixed(2)}<br>` : ''}
+                    ${prancha.stock !== undefined ? `<strong>Estoque:</strong> ${prancha.stock} unidades<br>` : ''}
+                  </p>
+                </div>
+                <div class="card-actions">
+                  <a href="https://bp.ocoworks.com/produto/${prancha.handle}" target="_blank" class="btn btn-primary btn-sm">
+                    <i class="fas fa-external-link-alt"></i> Ver Produto
+                  </a>
+                  <button onclick="verDetalhes(${index})" class="btn btn-outline-secondary btn-sm">
+                    <i class="fas fa-info-circle"></i> Detalhes
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        `;
+      });
+      
+      html += `
+        </div>
+        
+        <div class="resultados-footer mt-4">
+          <div class="alert alert-light">
+            <h6>💡 Dicas para escolher sua prancha:</h6>
+            <ul class="mb-0">
+              <li>Pranchas com volume próximo ao calculado oferecem melhor flutuação</li>
+              <li>Considere sua experiência e condicionamento físico</li>
+              <li>Teste diferentes categorias para encontrar o que funciona melhor para você</li>
+              <li>O Guild Factor é uma referência - ajuste conforme sua preferência</li>
+            </ul>
+          </div>
+        </div>
+      `;
+      
+      resultadosDiv.innerHTML = html;
+      document.getElementById('resultados').scrollIntoView({ behavior: 'smooth' });
+    }
+
+    // Função para buscar pranchas recomendadas
+    async function buscarPranchas(volumeCalculado, categoria) {
+      try {
+        showLoading(true);
+        
+        // Tolerância MUITO mais flexível para encontrar mais pranchas
+        const tolerancia = Math.max(volumeCalculado * 0.30, 8); // 30% ou mínimo 8L
+        const volumeMin = volumeCalculado - tolerancia;
+        const volumeMax = volumeCalculado + tolerancia;
+        
+        console.log(`Buscando pranchas: Volume ${volumeCalculado}L ± ${tolerancia}L (${volumeMin}L - ${volumeMax}L)`);
+        
+        const response = await fetch('https://bp2.ocoworks.com/nuvemshop-proxy-vps.php', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            volume_min: volumeMin,
+            volume_max: volumeMax,
+            categoria: categoria || 'todas' // Sempre buscar todas as categorias se não especificada
+          })
+        });
+        
+        if (!response.ok) {
+          throw new Error(`Erro HTTP: ${response.status}`);
+        }
+        
+        const data = await response.json();
+        
+        if (data.success) {
+          const pranchas = data.products || [];
+          
+          if (pranchas.length > 0) {
+            // Ordenar por proximidade do volume calculado
+            pranchas.sort((a, b) => {
+              const diffA = Math.abs(a.volume - volumeCalculado);
+              const diffB = Math.abs(b.volume - volumeCalculado);
+              return diffA - diffB;
+            });
+            
+            // Mostrar mais pranchas (até 12)
+            const pranchasRecomendadas = pranchas.slice(0, 12);
+            
+            mostrarResultados(pranchasRecomendadas, volumeCalculado);
+          } else {
+            // Se não encontrou nada, tentar com tolerância MUITO maior
+            const toleranciaAmpliada = Math.max(volumeCalculado * 0.50, 12); // 50% ou mínimo 12L
+            const volumeMinAmpliado = volumeCalculado - toleranciaAmpliada;
+            const volumeMaxAmpliado = volumeCalculado + toleranciaAmpliada;
+            
+            console.log(`Tentando busca MUITO ampliada: Volume ${volumeCalculado}L ± ${toleranciaAmpliada}L (${volumeMinAmpliado}L - ${volumeMaxAmpliado}L)`);
+            
+            const responseAmpliado = await fetch('https://bp2.ocoworks.com/nuvemshop-proxy-vps.php', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify({
+                volume_min: volumeMinAmpliado,
+                volume_max: volumeMaxAmpliado,
+                categoria: 'todas' // Sempre buscar todas as categorias na busca ampliada
+              })
+            });
+            
+            if (responseAmpliado.ok) {
+              const dataAmpliado = await responseAmpliado.json();
+              if (dataAmpliado.success && dataAmpliado.products && dataAmpliado.products.length > 0) {
+                const pranchasAmpliadas = dataAmpliado.products.sort((a, b) => {
+                  const diffA = Math.abs(a.volume - volumeCalculado);
+                  const diffB = Math.abs(b.volume - volumeCalculado);
+                  return diffA - diffB;
+                }).slice(0, 8);
+                
+                mostrarResultados(pranchasAmpliadas, volumeCalculado, true);
+              } else {
+                // Se ainda não encontrou, mostrar todas as pranchas disponíveis
+                const responseTodas = await fetch('https://bp2.ocoworks.com/nuvemshop-proxy-vps.php', {
+                  method: 'POST',
+                  headers: {
+                    'Content-Type': 'application/json',
+                  },
+                  body: JSON.stringify({
+                    volume_min: 0,
+                    volume_max: 999,
+                    categoria: 'todas'
+                  })
+                });
+                
+                if (responseTodas.ok) {
+                  const dataTodas = await responseTodas.json();
+                  if (dataTodas.success && dataTodas.products && dataTodas.products.length > 0) {
+                    const todasPranchas = dataTodas.products.sort((a, b) => {
+                      const diffA = Math.abs(a.volume - volumeCalculado);
+                      const diffB = Math.abs(b.volume - volumeCalculado);
+                      return diffA - diffB;
+                    }).slice(0, 6);
+                    
+                    mostrarResultados(todasPranchas, volumeCalculado, true);
+                  } else {
+                    mostrarMensagem('Nenhuma prancha encontrada. Verifique se há produtos cadastrados na loja ou se os volumes estão sendo extraídos corretamente.', 'warning');
+                  }
+                } else {
+                  mostrarMensagem('Nenhuma prancha encontrada com o volume calculado. Tente ajustar os parâmetros ou verifique se há produtos cadastrados.', 'warning');
+                }
+              }
+            } else {
+              mostrarMensagem('Nenhuma prancha encontrada com o volume calculado. Tente ajustar os parâmetros ou verifique se há produtos cadastrados.', 'warning');
+            }
+          }
+        } else {
+          throw new Error(data.error || 'Erro desconhecido');
+        }
+      } catch (error) {
+        console.error('Erro ao buscar pranchas:', error);
+        mostrarMensagem('Erro ao conectar com a loja. Verifique sua conexão e tente novamente.', 'error');
+      } finally {
+        showLoading(false);
+      }
+    }
+
+    // Handler do formulário
+    document.getElementById('volumeForm').onsubmit = async function(e) {
+      e.preventDefault();
+      const validation = validateForm();
+      if (!validation.isValid) {
+        alert('Por favor, corrija os seguintes erros:\n' + validation.message);
+        return;
+      }
+      const peso = parseFloat(document.getElementById('peso').value);
+      const idade = parseInt(document.getElementById('idade').value);
+      const condicao = document.getElementById('condicao').value;
+      const habilidade = document.getElementById('habilidade').value;
+      const onda = document.getElementById('onda') ? document.getElementById('onda').value : null;
+      const categoria = document.getElementById('categoria') ? document.getElementById('categoria').value : null;
+      const gfManual = parseFloat(document.getElementById('gf').value);
+      // Calcular volume
+      const volume = calcularVolume(peso, habilidade, idade, condicao, onda, gfManual);
+      const recomendacao = getRecomendacao(volume, habilidade);
+      // Mostrar resultado
+      const resultadoDiv = document.getElementById('resultado');
+      resultadoDiv.innerHTML = `
+        <div class="volume-display">${volume}L</div>
+        <div><strong>Volume ideal calculado</strong></div>
+        <div style="margin-top: 12px; font-size: 0.9em;">${recomendacao}</div>
+        <div style="margin-top: 8px; font-size: 0.85em; color: #888;">GF usado: <b>${gfManual}</b></div>
+      `;
+      resultadoDiv.style.display = 'block';
+      // Buscar pranchas
+      await buscarPranchas(volume, categoria);
     };
+
+    // Validação em tempo real
+    document.querySelectorAll('input[type="number"]').forEach(input => {
+      input.addEventListener('blur', function() {
+        const validation = validateForm();
+        if (!validation.isValid) {
+          this.style.borderColor = '#e74c3c';
+        } else {
+          this.style.borderColor = '#e1e8ed';
+        }
+      });
+    });
   </script>
 </body>
 </html>

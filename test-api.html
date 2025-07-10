@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teste da API - Board's Point</title>
+    <style>
+        body { 
+            font-family: Arial, sans-serif; 
+            margin: 40px; 
+            background: #f5f5f5;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .test-section { 
+            margin: 20px 0; 
+            padding: 20px; 
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            background: #fafafa;
+        }
+        .success { 
+            background: #d4edda; 
+            color: #155724; 
+            border-color: #c3e6cb;
+        }
+        .error { 
+            background: #f8d7da; 
+            color: #721c24; 
+            border-color: #f5c6cb;
+        }
+        .warning {
+            background: #fff3cd;
+            color: #856404;
+            border-color: #ffeaa7;
+        }
+        pre { 
+            background: #f8f9fa; 
+            padding: 10px; 
+            border-radius: 4px;
+            overflow-x: auto;
+            font-size: 12px;
+        }
+        button {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        button:hover {
+            background: #0056b3;
+        }
+        .result {
+            margin-top: 15px;
+            padding: 15px;
+            border-radius: 5px;
+        }
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+        .stat-card {
+            background: #e9ecef;
+            padding: 15px;
+            border-radius: 5px;
+            text-align: center;
+        }
+        .stat-number {
+            font-size: 2em;
+            font-weight: bold;
+            color: #007bff;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔍 Debug API - Board's Point</h1>
+        
+        <div class="test-section">
+            <h2>📋 Informações do Sistema</h2>
+            <p><strong>Domínio:</strong> bp.ocoworks.com</p>
+            <p><strong>PHP Version:</strong> 8.2.28</p>
+            <p><strong>cURL:</strong> ✅ Habilitado</p>
+            <p><strong>JSON:</strong> ✅ Habilitado</p>
+        </div>
+        
+        <div class="test-section">
+            <h2>🧪 Teste 1: API Direta</h2>
+            <button onclick="testDirectAPI()">Testar API Direta</button>
+            <div id="direct-api-result"></div>
+        </div>
+        
+        <div class="test-section">
+            <h2>🧪 Teste 2: Proxy Local</h2>
+            <button onclick="testProxyAPI()">Testar Proxy Local</button>
+            <div id="proxy-api-result"></div>
+        </div>
+        
+        <div class="test-section">
+            <h2>🧪 Teste 3: Filtro de Produtos</h2>
+            <button onclick="testProductFilter()">Testar Filtro</button>
+            <div id="filter-result"></div>
+        </div>
+        
+        <div class="test-section">
+            <h2>🧪 Teste 4: Busca com Volume</h2>
+            <input type="number" id="volume-test" value="30" placeholder="Volume (ex: 30)" style="width: 150px; padding: 8px; margin-right: 10px;">
+            <button onclick="testVolumeSearch()">Buscar por Volume</button>
+            <div id="volume-result"></div>
+        </div>
+        
+        <div class="test-section">
+            <h2>🔍 Todos os Produtos - Board's Point</h2>
+            <button onclick="showAllProducts()">Carregar Todos os Produtos</button>
+            <div id="all-products-result"></div>
+        </div>
+        
+        <div class="test-section">
+            <h2>🔍 Busca Avançada</h2>
+            <input type="number" id="volume-advanced" placeholder="Volume (ex: 35)" style="width: 150px; padding: 8px; margin-right: 10px;">
+            <select id="categoria-advanced" style="width: 150px; padding: 8px; margin-right: 10px;">
+                <option value="">Todas as categorias</option>
+                <option value="shortboard">Shortboard</option>
+                <option value="fish">Fish</option>
+                <option value="longboard">Longboard</option>
+                <option value="funboard">Funboard</option>
+                <option value="retro">Retro</option>
+                <option value="stepup">Step Up</option>
+                <option value="bigwave">Big Wave</option>
+                <option value="grom">Grom</option>
+            </select>
+            <button onclick="advancedSearch()">Filtrar</button>
+            <button onclick="showAllProducts()">Mostrar Todos</button>
+            <div id="advanced-result"></div>
+        </div>
+    </div>
+
+    <script>
+        async function testDirectAPI() {
+            const resultDiv = document.getElementById('direct-api-result');
+            resultDiv.innerHTML = '<p>Testando...</p>';
+            
+            try {
+                const response = await fetch('nuvemshop-proxy.php');
+                const data = await response.json();
+                
+                if (data.error) {
+                    resultDiv.innerHTML = `
+                        <div class="error">
+                            <h3>❌ Erro na API</h3>
+                            <p><strong>Erro:</strong> ${data.error}</p>
+                        </div>
+                    `;
+                } else {
+                    const products = data.products || data;
+                    const withVolume = products.filter(p => p.volume && p.volume > 0).length;
+                    const withoutVolume = products.length - withVolume;
+                    
+                    resultDiv.innerHTML = `
+                        <div class="success">
+                            <h3>✅ API funcionando!</h3>
+                            <div class="stats">
+                                <div class="stat-card">
+                                    <div class="stat-number">${products.length}</div>
+                                    <div>Total de Produtos</div>
+                                </div>
+                                <div class="stat-card">
+                                    <div class="stat-number">${withVolume}</div>
+                                    <div>Com Volume</div>
+                                </div>
+                                <div class="stat-card">
+                                    <div class="stat-number">${withoutVolume}</div>
+                                    <div>Sem Volume</div>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                }
+            } catch (error) {
+                resultDiv.innerHTML = `
+                    <div class="error">
+                        <h3>❌ Erro de conexão</h3>
+                        <p><strong>Erro:</strong> ${error.message}</p>
+                    </div>
+                `;
+            }
+        }
+        
+        async function testProxyAPI() {
+            const resultDiv = document.getElementById('proxy-api-result');
+            resultDiv.innerHTML = '<p>Testando...</p>';
+            
+            try {
+                const response = await fetch('nuvemshop-proxy.php');
+                const data = await response.json();
+                
+                if (data.error) {
+                    resultDiv.innerHTML = `
+                        <div class="error">
+                            <h3>❌ Erro no Proxy</h3>
+                            <p><strong>Erro:</strong> ${data.error}</p>
+                        </div>
+                    `;
+                } else {
+                    resultDiv.innerHTML = `
+                        <div class="success">
+                            <h3>✅ Proxy funcionando!</h3>
+                            <p><strong>Status:</strong> ${data.success ? 'Sucesso' : 'Erro'}</p>
+                            <p><strong>Produtos:</strong> ${data.products ? data.products.length : 'N/A'}</p>
+                        </div>
+                    `;
+                }
+            } catch (error) {
+                resultDiv.innerHTML = `
+                    <div class="error">
+                        <h3>❌ Erro no Proxy</h3>
+                        <p><strong>Erro:</strong> ${error.message}</p>
+                    </div>
+                `;
+            }
+        }
+        
+        async function testProductFilter() {
+            const resultDiv = document.getElementById('filter-result');
+            resultDiv.innerHTML = '<p>Testando...</p>';
+            
+            try {
+                const response = await fetch('nuvemshop-proxy.php', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        volume_min: 25,
+                        volume_max: 35,
+                        categoria: 'shortboard'
+                    })
+                });
+                
+                const data = await response.json();
+                
+                if (data.error) {
+                    resultDiv.innerHTML = `
+                        <div class="error">
+                            <h3>❌ Erro na API</h3>
+                            <p><strong>Erro:</strong> ${data.error}</p>
+                        </div>
+                    `;
+                } else {
+                    const products = data.products || [];
+                    resultDiv.innerHTML = `
+                        <div class="success">
+                            <h3>✅ Filtro funcionando!</h3>
+                            <p><strong>Produtos encontrados:</strong> ${products.length}</p>
+                            <p><strong>Filtro aplicado:</strong> Volume 25-35L, Categoria: Shortboard</p>
+                        </div>
+                    `;
+                }
+            } catch (error) {
+                resultDiv.innerHTML = `
+                    <div class="error">
+                        <h3>❌ Erro na API</h3>
+                        <p><strong>Erro:</strong> ${error.message}</p>
+                    </div>
+                `;
+            }
+        }
+        
+        async function testVolumeSearch() {
+            const volume = document.getElementById('volume-test').value;
+            const resultDiv = document.getElementById('volume-result');
+            resultDiv.innerHTML = '<p>Testando...</p>';
+            
+            try {
+                const response = await fetch('nuvemshop-proxy.php', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        volume_min: volume - 5,
+                        volume_max: volume + 5
+                    })
+                });
+                
+                const data = await response.json();
+                
+                if (data.error) {
+                    resultDiv.innerHTML = `
+                        <div class="error">
+                            <h3>❌ Erro na API</h3>
+                            <p><strong>Erro:</strong> ${data.error}</p>
+                        </div>
+                    `;
+                } else {
+                    const products = data.products || [];
+                    resultDiv.innerHTML = `
+                        <div class="success">
+                            <h3>✅ Busca por volume funcionando!</h3>
+                            <p><strong>Volume buscado:</strong> ${volume}L</p>
+                            <p><strong>Faixa:</strong> ${volume-5}L - ${parseInt(volume)+5}L</p>
+                            <p><strong>Produtos encontrados:</strong> ${products.length}</p>
+                        </div>
+                    `;
+                }
+            } catch (error) {
+                resultDiv.innerHTML = `
+                    <div class="error">
+                        <h3>❌ Erro na API</h3>
+                        <p><strong>Erro:</strong> ${error.message}</p>
+                    </div>
+                `;
+            }
+        }
+        
+        async function showAllProducts() {
+            const resultDiv = document.getElementById('all-products-result');
+            resultDiv.innerHTML = '<p>Carregando...</p>';
+            
+            try {
+                const response = await fetch('nuvemshop-proxy.php');
+                const data = await response.json();
+                
+                if (data.error) {
+                    resultDiv.innerHTML = `
+                        <div class="error">
+                            <h3>❌ Erro</h3>
+                            <p><strong>Erro:</strong> ${data.error}</p>
+                        </div>
+                    `;
+                } else {
+                    const products = data.products || data;
+                    const withVolume = products.filter(p => p.volume && p.volume > 0);
+                    const withoutVolume = products.filter(p => !p.volume || p.volume <= 0);
+                    
+                    let html = `
+                        <div class="success">
+                            <h3>✅ Produtos carregados!</h3>
+                            <div class="stats">
+                                <div class="stat-card">
+                                    <div class="stat-number">${products.length}</div>
+                                    <div>Total</div>
+                                </div>
+                                <div class="stat-card">
+                                    <div class="stat-number">${withVolume.length}</div>
+                                    <div>Com Volume</div>
+                                </div>
+                                <div class="stat-card">
+                                    <div class="stat-number">${withoutVolume.length}</div>
+                                    <div>Sem Volume</div>
+                                </div>
+                            </div>
+                            <h4>Produtos com Volume (primeiros 10):</h4>
+                            <pre>${JSON.stringify(withVolume.slice(0, 10), null, 2)}</pre>
+                        </div>
+                    `;
+                    
+                    resultDiv.innerHTML = html;
+                }
+            } catch (error) {
+                resultDiv.innerHTML = `
+                    <div class="error">
+                        <h3>❌ Erro</h3>
+                        <p><strong>Erro:</strong> ${error.message}</p>
+                    </div>
+                `;
+            }
+        }
+        
+        async function advancedSearch() {
+            const volume = document.getElementById('volume-advanced').value;
+            const categoria = document.getElementById('categoria-advanced').value;
+            const resultDiv = document.getElementById('advanced-result');
+            resultDiv.innerHTML = '<p>Buscando...</p>';
+            
+            try {
+                const body = {};
+                if (volume) {
+                    body.volume_min = volume - 5;
+                    body.volume_max = parseInt(volume) + 5;
+                }
+                if (categoria) {
+                    body.categoria = categoria;
+                }
+                
+                const response = await fetch('nuvemshop-proxy.php', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(body)
+                });
+                
+                const data = await response.json();
+                
+                if (data.error) {
+                    resultDiv.innerHTML = `
+                        <div class="error">
+                            <h3>❌ Erro</h3>
+                            <p><strong>Erro:</strong> ${data.error}</p>
+                        </div>
+                    `;
+                } else {
+                    const products = data.products || [];
+                    resultDiv.innerHTML = `
+                        <div class="success">
+                            <h3>✅ Busca avançada funcionando!</h3>
+                            <p><strong>Produtos encontrados:</strong> ${products.length}</p>
+                            ${volume ? `<p><strong>Volume:</strong> ${volume-5}L - ${parseInt(volume)+5}L</p>` : ''}
+                            ${categoria ? `<p><strong>Categoria:</strong> ${categoria}</p>` : ''}
+                            <pre>${JSON.stringify(products.slice(0, 5), null, 2)}</pre>
+                        </div>
+                    `;
+                }
+            } catch (error) {
+                resultDiv.innerHTML = `
+                    <div class="error">
+                        <h3>❌ Erro</h3>
+                        <p><strong>Erro:</strong> ${error.message}</p>
+                    </div>
+                `;
+            }
+        }
+        
+        // Teste automático ao carregar a página
+        window.onload = function() {
+            testDirectAPI();
+        };
+    </script>
+</body>
+</html> 

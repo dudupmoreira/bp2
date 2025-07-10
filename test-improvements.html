@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teste das Melhorias - Calculadora de Volume</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .test-section { margin: 20px 0; padding: 15px; border: 1px solid #ddd; border-radius: 5px; }
+        .success { background-color: #d4edda; border-color: #c3e6cb; }
+        .error { background-color: #f8d7da; border-color: #f5c6cb; }
+        .info { background-color: #d1ecf1; border-color: #bee5eb; }
+        button { padding: 10px 20px; margin: 5px; cursor: pointer; }
+        pre { background: #f8f9fa; padding: 10px; border-radius: 3px; overflow-x: auto; }
+    </style>
+</head>
+<body>
+    <h1>🧪 Teste das Melhorias - Calculadora de Volume</h1>
+    
+    <div class="test-section info">
+        <h3>📋 Melhorias Implementadas</h3>
+        <ul>
+            <li><strong>Tolerância de Volume:</strong> Aumentada de 15% para 30% (busca inicial) e 50% (busca ampliada)</li>
+            <li><strong>Limite da API:</strong> Aumentado de 50 para 100 produtos</li>
+            <li><strong>Categorização:</strong> Melhorada com mais categorias (gun, hybrid, performance, beginner, retro)</li>
+            <li><strong>Filtro de Categoria:</strong> Mais flexível, incluindo categorias relacionadas</li>
+            <li><strong>Busca de Fallback:</strong> Se não encontrar nada, mostra todas as pranchas disponíveis</li>
+        </ul>
+    </div>
+    
+    <div class="test-section">
+        <h3>🔍 Teste 1: Busca com Volume 35L (Tolerância 30%)</h3>
+        <p>Volume: 35L ± 10.5L (24.5L - 45.5L)</p>
+        <button onclick="testVolume35()">Testar Busca</button>
+        <div id="result1"></div>
+    </div>
+    
+    <div class="test-section">
+        <h3>🔍 Teste 2: Busca com Volume 50L (Tolerância 30%)</h3>
+        <p>Volume: 50L ± 15L (35L - 65L)</p>
+        <button onclick="testVolume50()">Testar Busca</button>
+        <div id="result2"></div>
+    </div>
+    
+    <div class="test-section">
+        <h3>🔍 Teste 3: Busca Ampliada (Tolerância 50%)</h3>
+        <p>Volume: 40L ± 20L (20L - 60L)</p>
+        <button onclick="testVolume40()">Testar Busca Ampliada</button>
+        <div id="result3"></div>
+    </div>
+    
+    <div class="test-section">
+        <h3>🔍 Teste 4: Todas as Pranchas Disponíveis</h3>
+        <p>Busca todas as pranchas sem filtro de volume</p>
+        <button onclick="testAllProducts()">Testar Todas as Pranchas</button>
+        <div id="result4"></div>
+    </div>
+    
+    <div class="test-section">
+        <h3>🔍 Teste 5: Análise de Categorias</h3>
+        <p>Verificar como as categorias estão sendo classificadas</p>
+        <button onclick="testCategories()">Analisar Categorias</button>
+        <div id="result5"></div>
+    </div>
+
+    <script>
+        async function testVolume35() {
+            const resultDiv = document.getElementById('result1');
+            resultDiv.innerHTML = '<p>🔄 Testando...</p>';
+            
+            try {
+                const response = await fetch('nuvemshop-proxy-simple.php', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        volume_min: 24.5,
+                        volume_max: 45.5,
+                        categoria: 'todas'
+                    })
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    const products = data.products || [];
+                    resultDiv.innerHTML = `
+                        <div class="success">
+                            <h4>✅ Encontrados ${products.length} produtos</h4>
+                            <pre>${JSON.stringify(products.slice(0, 3), null, 2)}</pre>
+                            ${products.length > 3 ? `<p>... e mais ${products.length - 3} produtos</p>` : ''}
+                        </div>
+                    `;
+                } else {
+                    resultDiv.innerHTML = `<div class="error"><h4>❌ Erro</h4><p>${data.error || 'Erro desconhecido'}</p></div>`;
+                }
+            } catch (error) {
+                resultDiv.innerHTML = `<div class="error"><h4>❌ Erro de Conexão</h4><p>${error.message}</p></div>`;
+            }
+        }
+        
+        async function testVolume50() {
+            const resultDiv = document.getElementById('result2');
+            resultDiv.innerHTML = '<p>🔄 Testando...</p>';
+            
+            try {
+                const response = await fetch('nuvemshop-proxy-simple.php', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        volume_min: 35,
+                        volume_max: 65,
+                        categoria: 'todas'
+                    })
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    const products = data.products || [];
+                    resultDiv.innerHTML = `
+                        <div class="success">
+                            <h4>✅ Encontrados ${products.length} produtos</h4>
+                            <pre>${JSON.stringify(products.slice(0, 3), null, 2)}</pre>
+                            ${products.length > 3 ? `<p>... e mais ${products.length - 3} produtos</p>` : ''}
+                        </div>
+                    `;
+                } else {
+                    resultDiv.innerHTML = `<div class="error"><h4>❌ Erro</h4><p>${data.error || 'Erro desconhecido'}</p></div>`;
+                }
+            } catch (error) {
+                resultDiv.innerHTML = `<div class="error"><h4>❌ Erro de Conexão</h4><p>${error.message}</p></div>`;
+            }
+        }
+        
+        async function testVolume40() {
+            const resultDiv = document.getElementById('result3');
+            resultDiv.innerHTML = '<p>🔄 Testando busca ampliada...</p>';
+            
+            try {
+                const response = await fetch('nuvemshop-proxy-simple.php', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        volume_min: 20,
+                        volume_max: 60,
+                        categoria: 'todas'
+                    })
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    const products = data.products || [];
+                    resultDiv.innerHTML = `
+                        <div class="success">
+                            <h4>✅ Encontrados ${products.length} produtos (busca ampliada)</h4>
+                            <pre>${JSON.stringify(products.slice(0, 3), null, 2)}</pre>
+                            ${products.length > 3 ? `<p>... e mais ${products.length - 3} produtos</p>` : ''}
+                        </div>
+                    `;
+                } else {
+                    resultDiv.innerHTML = `<div class="error"><h4>❌ Erro</h4><p>${data.error || 'Erro desconhecido'}</p></div>`;
+                }
+            } catch (error) {
+                resultDiv.innerHTML = `<div class="error"><h4>❌ Erro de Conexão</h4><p>${error.message}</p></div>`;
+            }
+        }
+        
+        async function testAllProducts() {
+            const resultDiv = document.getElementById('result4');
+            resultDiv.innerHTML = '<p>🔄 Buscando todas as pranchas...</p>';
+            
+            try {
+                const response = await fetch('nuvemshop-proxy-simple.php', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        volume_min: 0,
+                        volume_max: 999,
+                        categoria: 'todas'
+                    })
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    const products = data.products || [];
+                    resultDiv.innerHTML = `
+                        <div class="success">
+                            <h4>✅ Total de ${products.length} produtos disponíveis</h4>
+                            <p><strong>Produtos com volume:</strong> ${products.filter(p => p.volume).length}</p>
+                            <p><strong>Produtos sem volume:</strong> ${products.filter(p => !p.volume).length}</p>
+                            <pre>${JSON.stringify(products.slice(0, 2), null, 2)}</pre>
+                            ${products.length > 2 ? `<p>... e mais ${products.length - 2} produtos</p>` : ''}
+                        </div>
+                    `;
+                } else {
+                    resultDiv.innerHTML = `<div class="error"><h4>❌ Erro</h4><p>${data.error || 'Erro desconhecido'}</p></div>`;
+                }
+            } catch (error) {
+                resultDiv.innerHTML = `<div class="error"><h4>❌ Erro de Conexão</h4><p>${error.message}</p></div>`;
+            }
+        }
+        
+        async function testCategories() {
+            const resultDiv = document.getElementById('result5');
+            resultDiv.innerHTML = '<p>🔄 Analisando categorias...</p>';
+            
+            try {
+                const response = await fetch('nuvemshop-proxy-simple.php', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        volume_min: 0,
+                        volume_max: 999,
+                        categoria: 'todas'
+                    })
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    const products = data.products || [];
+                    const categories = {};
+                    
+                    products.forEach(product => {
+                        const cat = product.categoria || 'sem categoria';
+                        categories[cat] = (categories[cat] || 0) + 1;
+                    });
+                    
+                    const categoryList = Object.entries(categories)
+                        .sort(([,a], [,b]) => b - a)
+                        .map(([cat, count]) => `${cat}: ${count}`)
+                        .join('\n');
+                    
+                    resultDiv.innerHTML = `
+                        <div class="success">
+                            <h4>✅ Análise de Categorias</h4>
+                            <p><strong>Total de produtos:</strong> ${products.length}</p>
+                            <p><strong>Distribuição por categoria:</strong></p>
+                            <pre>${categoryList}</pre>
+                        </div>
+                    `;
+                } else {
+                    resultDiv.innerHTML = `<div class="error"><h4>❌ Erro</h4><p>${data.error || 'Erro desconhecido'}</p></div>`;
+                }
+            } catch (error) {
+                resultDiv.innerHTML = `<div class="error"><h4>❌ Erro de Conexão</h4><p>${error.message}</p></div>`;
+            }
+        }
+    </script>
+</body>
+</html> 

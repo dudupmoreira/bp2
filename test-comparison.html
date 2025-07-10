@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Comparação de Proxies - Board's Point</title>
+    <style>
+        body { 
+            font-family: Arial, sans-serif; 
+            margin: 40px; 
+            background: #f5f5f5;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .test-section { 
+            margin: 20px 0; 
+            padding: 20px; 
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            background: #fafafa;
+        }
+        .success { 
+            background: #d4edda; 
+            color: #155724; 
+            border-color: #c3e6cb;
+        }
+        .error { 
+            background: #f8d7da; 
+            color: #721c24; 
+            border-color: #f5c6cb;
+        }
+        .warning {
+            background: #fff3cd;
+            color: #856404;
+            border-color: #ffeaa7;
+        }
+        pre { 
+            background: #f8f9fa; 
+            padding: 10px; 
+            border-radius: 4px;
+            overflow-x: auto;
+            font-size: 12px;
+        }
+        button {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        button:hover {
+            background: #0056b3;
+        }
+        .comparison {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin: 20px 0;
+        }
+        .proxy-test {
+            border: 1px solid #ddd;
+            padding: 15px;
+            border-radius: 5px;
+        }
+        .proxy-test h3 {
+            margin-top: 0;
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔍 Comparação de Proxies - Board's Point</h1>
+        <p>Teste para identificar se o problema é do shared hosting</p>
+        
+        <div class="test-section">
+            <h2>🧪 Teste de Limitações do Hosting</h2>
+            <button onclick="testHostingLimitations()">Testar Limitações</button>
+            <div id="hosting-test-result"></div>
+        </div>
+        
+        <div class="test-section">
+            <h2>🔄 Comparação de Proxies</h2>
+            <div class="comparison">
+                <div class="proxy-test">
+                    <h3>Proxy Original</h3>
+                    <button onclick="testOriginalProxy()">Testar Original</button>
+                    <div id="original-proxy-result"></div>
+                </div>
+                <div class="proxy-test">
+                    <h3>Proxy Simplificado</h3>
+                    <button onclick="testSimpleProxy()">Testar Simplificado</button>
+                    <div id="simple-proxy-result"></div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="test-section">
+            <h2>📊 Análise de Resultados</h2>
+            <div id="analysis-result"></div>
+        </div>
+        
+        <div class="test-section">
+            <h2>💡 Recomendações</h2>
+            <div id="recommendations"></div>
+        </div>
+    </div>
+
+    <script>
+        async function testHostingLimitations() {
+            const resultDiv = document.getElementById('hosting-test-result');
+            resultDiv.innerHTML = '<p>Testando limitações do hosting...</p>';
+            
+            try {
+                const response = await fetch('test-hosting-limitations.php');
+                const html = await response.text();
+                resultDiv.innerHTML = `
+                    <div class="warning">
+                        <h3>📋 Resultado do Teste de Limitações</h3>
+                        <div style="max-height: 400px; overflow-y: auto; background: white; padding: 15px; border-radius: 5px;">
+                            ${html}
+                        </div>
+                    </div>
+                `;
+            } catch (error) {
+                resultDiv.innerHTML = `
+                    <div class="error">
+                        <h3>❌ Erro ao testar limitações</h3>
+                        <p><strong>Erro:</strong> ${error.message}</p>
+                    </div>
+                `;
+            }
+        }
+        
+        async function testOriginalProxy() {
+            const resultDiv = document.getElementById('original-proxy-result');
+            resultDiv.innerHTML = '<p>Testando proxy original...</p>';
+            
+            try {
+                const response = await fetch('nuvemshop-proxy.php');
+                const data = await response.json();
+                
+                if (data.error) {
+                    resultDiv.innerHTML = `
+                        <div class="error">
+                            <h3>❌ Erro no Proxy Original</h3>
+                            <p><strong>Erro:</strong> ${data.error}</p>
+                        </div>
+                    `;
+                } else {
+                    const products = data.products || data;
+                    const withVolume = products.filter(p => p.volume && p.volume > 0).length;
+                    
+                    resultDiv.innerHTML = `
+                        <div class="success">
+                            <h3>✅ Proxy Original Funcionando</h3>
+                            <p><strong>Total:</strong> ${products.length} produtos</p>
+                            <p><strong>Com Volume:</strong> ${withVolume} produtos</p>
+                        </div>
+                    `;
+                }
+            } catch (error) {
+                resultDiv.innerHTML = `
+                    <div class="error">
+                        <h3>❌ Erro no Proxy Original</h3>
+                        <p><strong>Erro:</strong> ${error.message}</p>
+                    </div>
+                `;
+            }
+        }
+        
+        async function testSimpleProxy() {
+            const resultDiv = document.getElementById('simple-proxy-result');
+            resultDiv.innerHTML = '<p>Testando proxy simplificado...</p>';
+            
+            try {
+                const response = await fetch('nuvemshop-proxy-simple.php');
+                const data = await response.json();
+                
+                if (data.error) {
+                    resultDiv.innerHTML = `
+                        <div class="error">
+                            <h3>❌ Erro no Proxy Simplificado</h3>
+                            <p><strong>Erro:</strong> ${data.error}</p>
+                        </div>
+                    `;
+                } else {
+                    const products = data.products || data;
+                    const withVolume = products.filter(p => p.volume && p.volume > 0).length;
+                    
+                    resultDiv.innerHTML = `
+                        <div class="success">
+                            <h3>✅ Proxy Simplificado Funcionando</h3>
+                            <p><strong>Total:</strong> ${products.length} produtos</p>
+                            <p><strong>Com Volume:</strong> ${withVolume} produtos</p>
+                        </div>
+                    `;
+                }
+            } catch (error) {
+                resultDiv.innerHTML = `
+                    <div class="error">
+                        <h3>❌ Erro no Proxy Simplificado</h3>
+                        <p><strong>Erro:</strong> ${error.message}</p>
+                    </div>
+                `;
+            }
+        }
+        
+        async function analyzeResults() {
+            const analysisDiv = document.getElementById('analysis-result');
+            const recommendationsDiv = document.getElementById('recommendations');
+            
+            // Simular análise baseada nos resultados dos testes
+            analysisDiv.innerHTML = `
+                <h3>📊 Análise dos Resultados</h3>
+                <p>Execute os testes acima para ver a análise completa.</p>
+                <p>Se ambos os proxies falharem com HTTP 422, é provável uma limitação do shared hosting.</p>
+                <p>Se apenas um falhar, pode ser um problema de configuração específica.</p>
+            `;
+            
+            recommendationsDiv.innerHTML = `
+                <h3>💡 Recomendações Baseadas nos Resultados</h3>
+                <ul>
+                    <li><strong>Se ambos falharem:</strong> Contate o suporte da Hostinger sobre limitações de API</li>
+                    <li><strong>Se apenas um funcionar:</strong> Use o que funcionar</li>
+                    <li><strong>Se nenhum funcionar:</strong> Considere um VPS ou proxy externo</li>
+                    <li><strong>Se ambos funcionarem:</strong> Use o mais estável</li>
+                </ul>
+            `;
+        }
+        
+        // Executar análise inicial
+        analyzeResults();
+    </script>
+</body>
+</html> 
